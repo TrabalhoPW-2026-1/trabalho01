@@ -1,4 +1,4 @@
-import World from "./world.js";
+import { World } from "./world.js";
 
 /**
  * Assinatura geral para sistemas
