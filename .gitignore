@@ -1,0 +1,15 @@
+logs/
+build/
+dist/
+tmp/
+
+lib/
+dist/
+node_modules/
+
+*.log
+*.tmp
+*.bak
+
+!**/**/.gitkeep
+
