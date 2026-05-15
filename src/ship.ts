@@ -8,6 +8,9 @@ const directions = [
 ]
 
 class Ship {
+  element: HTMLImageElement
+  direction: number
+
   constructor() {
     this.element = document.createElement("img")
     this.element.id = "ship"
@@ -17,7 +20,8 @@ class Ship {
     this.element.style.left = `${TAMX / 2 - 50}px`
     space.element.appendChild(this.element)
   }
-  changeDirection(giro) { // -1 +1
+
+  changeDirection(giro: number) { // -1 +1
     if (this.direction + giro >= 0 && this.direction + giro <= 2)
       this.direction = this.direction + giro
     this.element.src = directions[this.direction]

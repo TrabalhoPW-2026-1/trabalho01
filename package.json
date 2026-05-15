@@ -1,18 +1,18 @@
 {
   "name": "trabalho01",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsx build src/main.ts --out-dir dist",
-    "start": "npx serve public",
-    "dev": "tsx src/main.ts --out-dir dist --watch"
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "npx serve .",
+    "dev": "npm run start & npm run watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "tsx": "^4.22.0"
+    "typescript": "^6.0.3"
   }
 }
