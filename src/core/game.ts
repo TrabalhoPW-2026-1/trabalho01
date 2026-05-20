@@ -5,6 +5,10 @@ import { createRandomEnemyShip, moveEnemyShips } from "../enemyShip.js"
 
 import { World } from "./world.js"
 import { System } from "./system.js"
+import { SpawnSystem } from "../systems/spawn.js"
+import { MovementSystem } from "../systems/movement.js"
+
+let ecsGame: Game
 
 window.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft") ship.changeDirection(-1)
@@ -14,11 +18,13 @@ window.addEventListener("keydown", (e) => {
 function run() {
   space.move()
   ship.move()
-  createRandomEnemyShip()
-  moveEnemyShips()
+  // createRandomEnemyShip()
+  // moveEnemyShips()
+  ecsGame.update()
 }
 
 export function init() {
+  ecsGame = new Game()
   setInterval(run, 1000 / FPS)
 }
 
@@ -26,7 +32,8 @@ export class Game {
   private world: World = new World();
 
   private systems: System[] = [
-    // Colocar os sistemas aqui
+    new SpawnSystem(),
+    new MovementSystem()
   ];
 
   /**

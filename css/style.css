@@ -11,3 +11,7 @@
 .enemy-ship {
   position: absolute;
 }
+
+.obstacle {
+  position: absolute;
+}
