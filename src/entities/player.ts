@@ -8,7 +8,7 @@ const directions = [
   "assets/png/playerRight.png",
 ];
 
-export class Ship implements Entity {
+export class Player implements Entity {
 
   element: HTMLImageElement;
 
