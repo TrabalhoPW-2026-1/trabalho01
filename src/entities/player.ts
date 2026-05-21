@@ -1,5 +1,5 @@
 import { TAMX } from "../config.js";
-import { Entity } from "../core/entity.js";
+import { Entity, EntityType } from "../core/entity.js";
 import { space } from "../space.js";
 
 const directions = [
@@ -22,6 +22,13 @@ export class Player implements Entity {
     y: 0
   };
 
+  size = {
+    width: 100,
+    height: 80
+  }
+
+  type: EntityType = 'player';
+
   direction = 1;
 
   constructor() {
@@ -29,6 +36,8 @@ export class Player implements Entity {
 
     this.element.id = "ship";
     this.element.src = directions[this.direction];
+    this.element.style.width = `${this.size.width}px`;
+    this.element.style.height = `${this.size.height}px`;
 
     this.syncElement();
 
