@@ -1,46 +1,40 @@
 import { FPS } from "../config.js"
-import { space } from "../space.js"
-import { ship } from "../ship.js"
-import { createRandomEnemyShip, moveEnemyShips } from "../enemyShip.js"
-
 import { World } from "./world.js"
+import { Player } from "../entities/player.js"
 import { System } from "./system.js"
+import { InputSystem } from "../systems/input.js"
 import { SpawnSystem } from "../systems/spawn.js"
 import { MovementSystem } from "../systems/movement.js"
 
-let ecsGame: Game
-
-window.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft") ship.changeDirection(-1)
-  if (e.key === "ArrowRight") ship.changeDirection(+1)
-})
-
-function run() {
-  space.move()
-  ship.move()
-  // createRandomEnemyShip()
-  // moveEnemyShips()
-  ecsGame.update()
-}
-
-export function init() {
-  ecsGame = new Game()
-  setInterval(run, 1000 / FPS)
-}
 
 export class Game {
   private world: World = new World();
 
   private systems: System[] = [
+    new InputSystem(),
     new SpawnSystem(),
     new MovementSystem()
   ];
+
+  constructor() {
+    // Inicializa o estado do jogo, criando o jogador e adicionando à lista de entidades
+    const player = new Player();
+    this.world.entities.push(player);
+  }
 
   /**
    * Inicia o ciclo de vida do jogo
    */
   start() {
     setInterval(() => { this.update(); }, 1000 / FPS);
+
+    window.addEventListener("keydown", (e) => {
+      this.world.keyboard[e.key] = true;
+    });
+
+    window.addEventListener("keyup", (e) => {
+      this.world.keyboard[e.key] = false;
+    });
   }
 
   /**
