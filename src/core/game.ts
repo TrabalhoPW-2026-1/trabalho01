@@ -5,28 +5,34 @@ import { System } from "./system.js"
 import { InputSystem } from "../systems/input.js"
 import { SpawnSystem } from "../systems/spawn.js"
 import { MovementSystem } from "../systems/movement.js"
+import { space } from "../space.js"
+import { ColisionSystem } from "../systems/colision.js"
 
 
 export class Game {
   private world: World = new World();
+  private intervalo: number | undefined;
 
   private systems: System[] = [
     new InputSystem(),
     new SpawnSystem(),
-    new MovementSystem()
+    new MovementSystem(),
+    new ColisionSystem()
   ];
 
   constructor() {
     // Inicializa o estado do jogo, criando o jogador e adicionando à lista de entidades
     const player = new Player();
     this.world.entities.push(player);
+
+    this.world.onGameOver = () => this.stop();
   }
 
   /**
    * Inicia o ciclo de vida do jogo
    */
   start() {
-    setInterval(() => { this.update(); }, 1000 / FPS);
+    this.intervalo = setInterval(() => { this.update(); }, 500 / FPS);
 
     window.addEventListener("keydown", (e) => {
       this.world.keyboard[e.key] = true;
@@ -37,6 +43,17 @@ export class Game {
     });
   }
 
+  stop(): void {
+    if (this.intervalo) {
+      clearInterval(this.intervalo);
+      this.intervalo = undefined;
+      setTimeout(() => {
+        alert("Game Over! Sua pontuação final foi: " + this.world.score);
+        window.location.reload();
+      }, 300)
+    }
+  }
+
   /**
    * Executa um ciclo de atualização do jogo, chamando o método update de cada sistema
    */
@@ -44,5 +61,6 @@ export class Game {
     for (const system of this.systems) {
       system.update(this.world);
     }
+    space.move();
   }
 }
