@@ -16,6 +16,7 @@ export class InputSystem implements System {
 	if ((left && right) || (!left && !right)) {
 		ship.setDirection(1);
 		ship.velocity.x = 0;
+		return;
 	}
 	ship.velocity.x = left ? -3 : right ? 3 : 0;
 	ship.setDirection(left ? 0 :  2);
