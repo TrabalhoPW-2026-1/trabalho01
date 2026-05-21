@@ -5,8 +5,8 @@ class Space {
 
   constructor() {
     this.element = document.getElementById("space")!
-    this.element.style.width = `${TAMX}px`
-    this.element.style.height = `${TAMY}px`
+    this.element.style.width = `100%`
+    this.element.style.height = `100%`
     this.element.style.backgroundPositionY = "0px"
   }
   move() {

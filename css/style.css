@@ -1,7 +1,18 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+}
+
 #space {
   background-image: url("../../assets/png/Background/starBackground.png");
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 #ship {
