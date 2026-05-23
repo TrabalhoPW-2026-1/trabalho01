@@ -1,3 +1,4 @@
+import { HasCollision } from "../components/HasCollision.js";
 import { TAMX } from "../config.js";
 import { Entity, EntityType } from "../core/entity.js";
 import { space } from "../space.js";
@@ -8,7 +9,7 @@ const directions = [
   "assets/png/playerRight.png",
 ];
 
-export class Player implements Entity {
+export class Player implements Entity, HasCollision {
 
   element: HTMLImageElement;
 
@@ -26,6 +27,11 @@ export class Player implements Entity {
     width: 100,
     height: 80
   }
+
+  hitbox: { width: number, height: number } = {
+    width: this.size.width,
+    height: this.size.height
+  };
 
   type: EntityType = 'player';
 

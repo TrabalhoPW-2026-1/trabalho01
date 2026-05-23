@@ -1,14 +1,18 @@
+import { HasCollision } from "../components/HasCollision.js";
 import { TAMX } from "../config.js";
 import { Entity, EntityType } from "../core/entity.js";
 import { space } from "../space.js";
 
-export class Obstacle implements Entity {
+export class Obstacle 
+    implements Entity, HasCollision {
+
     private static readonly recentPositions: number[] = [];
 
     element: HTMLImageElement;
     position: { x: number, y: number };
     velocity: { x: number, y: number };
     size: { width: number; height: number; };   
+    hitbox: { width: number; height: number; };
     type: EntityType = 'obstacle';
 
     constructor() {
@@ -18,6 +22,11 @@ export class Obstacle implements Entity {
         this.position = { x: this.getRandomPosition(), y: -20 };
         this.size = { width: 50, height: 50 };
         this.velocity = { x: 0, y: 1 };
+        
+        this.hitbox = {
+            width: this.size.width,
+            height: this.size.height
+        };
 
         this.element.style.left = `${this.position.x}px`;
         this.element.style.top = `${this.position.y}px`;

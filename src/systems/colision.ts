@@ -1,24 +1,25 @@
 import { Entity } from "../core/entity";
 import { System } from "../core/system";
 import { World } from "../core/world";
+import { HasCollision } from "../components/HasCollision.js";
 
 export class ColisionSystem implements System {
     private readonly collisionPadding = 2;
 
     update(world: World): void {
-        for (const entity of world.entities) {
-            if (!("element" in entity)) continue;
+        const collisionEntities: (Entity & HasCollision)[] = world.entities.filter(entity => "hitbox" in entity) as (Entity & HasCollision)[];
+        const player = collisionEntities.find(entity => entity.type === 'player');
+        if (!player) return;
 
-            for (const otherEntity of world.entities) {
-                if (entity === otherEntity) continue;
+        for (const otherEntity of collisionEntities) {
+            if (player === otherEntity) continue;
+            if (player.type === otherEntity.type) continue;
 
-                if (entity.type === otherEntity.type) continue;
-                if (!("element" in otherEntity)) continue;
+            if (!("element" in otherEntity)) continue;
 
-                const isColliding = this.checkCollision(entity, otherEntity);
-                if (isColliding) {
-                    world.gameOver();
-                }
+            const isColliding = this.checkCollision(player, otherEntity);
+            if (isColliding) {
+                world.gameOver();
             }
         }
     }
