@@ -1,0 +1,32 @@
+import { Entity, EntityType } from "../core/entity.js";
+import { space } from "../space.js";
+
+export class Coin implements Entity {
+	element: HTMLImageElement;
+	position: { x: number, y: number };
+	size: { width: number, height: number };
+	velocity: { x: number, y: number };
+	type: EntityType;
+
+	constructor(
+		x: number,
+		y: number,
+	) {
+		this.element = document.createElement("img");
+		this.element.className = "coin";
+		this.element.src = "assets/png/coin.png";
+		
+		this.position = { x, y };
+		this.element.style.left = `${this.position.x}px`;
+        this.element.style.top = `${this.position.y}px`;
+		
+		this.size = { width: 30, height: 30 };
+		this.element.style.width = `${this.size.width}px`;
+		this.element.style.height = `${this.size.height}px`;
+
+		this.velocity = { x: 0, y: 1 };
+		this.type = 'coin';
+
+		space.element.appendChild(this.element);
+	}
+}
