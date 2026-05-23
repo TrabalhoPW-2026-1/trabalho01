@@ -3,7 +3,7 @@
  * Assinatura geral para entidades do jogo (jogador, NPCs etc.)
  */
 
-export type EntityType = 'player' | 'obstacle' | 'coin';
+export type EntityType = 'player' | 'obstacle' | 'coin' | 'powerup';
 
 export interface Entity {
     element: HTMLElement | HTMLImageElement;
