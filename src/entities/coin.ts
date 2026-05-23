@@ -1,10 +1,12 @@
+import { HasCollision } from "../components/HasCollision.js";
 import { Entity, EntityType } from "../core/entity.js";
 import { space } from "../space.js";
 
-export class Coin implements Entity {
+export class Coin implements Entity, HasCollision {
 	element: HTMLImageElement;
 	position: { x: number, y: number };
 	size: { width: number, height: number };
+	hitbox: { width: number; height: number; };
 	velocity: { x: number, y: number };
 	type: EntityType;
 
@@ -23,6 +25,11 @@ export class Coin implements Entity {
 		this.size = { width: 30, height: 30 };
 		this.element.style.width = `${this.size.width}px`;
 		this.element.style.height = `${this.size.height}px`;
+
+		this.hitbox = {
+            width: this.size.width,
+            height: this.size.height
+        };
 
 		this.velocity = { x: 0, y: 1 };
 		this.type = 'coin';

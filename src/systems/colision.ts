@@ -19,7 +19,7 @@ export class ColisionSystem implements System {
 
             const isColliding = this.checkCollision(player, otherEntity);
             if (isColliding) {
-                world.gameOver();
+                this.checkInteractions(otherEntity, world);
             }
         }
     }
@@ -34,5 +34,45 @@ export class ColisionSystem implements System {
             playerRect.top + this.collisionPadding < obstacleRect.bottom - this.collisionPadding &&
             playerRect.bottom - this.collisionPadding > obstacleRect.top + this.collisionPadding
         );
+    }
+
+    private checkInteractions(entity: Entity, world: World): void {
+        switch (entity.type){
+            case "obstacle":
+                //escudo
+                if (world.powerupActivate) {
+                    world.powerupActivate = false;
+                }
+                else {
+                    world.lives -= 1;
+                }
+
+                this.destroyEntity(entity, world);
+                if (world.lives <= 0) world.gameOver();
+                
+                break;
+            case "coin":
+                world.score += 1;
+                this.destroyEntity(entity, world);
+                break;
+            case "powerup":
+                world.powerupActivate = true;
+                this.destroyEntity(entity, world);
+                break;
+            default:
+                console.log(`Strange interaction ocurring between player and ${entity.type}`)
+                break;
+        }
+
+    }
+
+    private destroyEntity(entity: Entity, world: World): void {
+        // Remove do DOM se houver elemento HTML
+        if ("element" in entity && entity.element) {
+            entity.element.remove();
+        }
+        
+        // Remove da lista de entidades
+        world.entities = world.entities.filter(e => e !== entity);
     }
 }

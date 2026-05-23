@@ -5,3 +5,4 @@ export const TAMY = document.documentElement.clientHeight
 export const PROB_ENEMY_SHIP = 0.004
 export const PROB_OBSTACLE = 0.015
 export const PROB_COIN = 0.001
+export const PROB_POWERUP = 0.001
