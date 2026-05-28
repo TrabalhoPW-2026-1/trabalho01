@@ -7,6 +7,7 @@ import { SpawnSystem } from "../systems/spawn.js"
 import { MovementSystem } from "../systems/movement.js"
 import { space } from "../space.js"
 import { ColisionSystem } from "../systems/colision.js"
+import { VisualAttachmentSystem } from "../systems/visualAttachment.js"
 
 
 export class Game {
@@ -17,7 +18,8 @@ export class Game {
     new InputSystem(),
     new SpawnSystem(),
     new MovementSystem(),
-    new ColisionSystem()
+    new VisualAttachmentSystem(),
+    new ColisionSystem(),
   ];
 
   constructor() {

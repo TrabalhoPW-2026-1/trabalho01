@@ -2,6 +2,7 @@ import { Entity } from "../core/entity";
 import { System } from "../core/system";
 import { World } from "../core/world";
 import { HasCollision } from "../components/HasCollision.js";
+import { HasVisualAttachments } from "../components/HasVisualAttachments.js";
 
 export class ColisionSystem implements System {
     private readonly collisionPadding = 2;
@@ -24,15 +25,13 @@ export class ColisionSystem implements System {
         }
     }
 
-    private checkCollision(player: Entity, obstacle: Entity): boolean {
-        const playerRect = player.element.getBoundingClientRect();
-        const obstacleRect = obstacle.element.getBoundingClientRect();
-
+    private checkCollision(a: Entity & HasCollision, b: Entity & HasCollision): boolean {
         return (
-            playerRect.left + this.collisionPadding < obstacleRect.right - this.collisionPadding &&
-            playerRect.right - this.collisionPadding > obstacleRect.left + this.collisionPadding &&
-            playerRect.top + this.collisionPadding < obstacleRect.bottom - this.collisionPadding &&
-            playerRect.bottom - this.collisionPadding > obstacleRect.top + this.collisionPadding
+            a.position.x < b.position.x + b.hitbox.width &&
+            a.position.x + a.hitbox.width > b.position.x &&
+
+            a.position.y < b.position.y + b.hitbox.height &&
+            a.position.y + a.hitbox.height > b.position.y
         );
     }
 
@@ -70,6 +69,12 @@ export class ColisionSystem implements System {
         // Remove do DOM se houver elemento HTML
         if ("element" in entity && entity.element) {
             entity.element.remove();
+        }
+        if ("visualAttachments" in entity) {
+            const visualAttachments = (entity as HasVisualAttachments).visualAttachments;
+            for (const attachment of visualAttachments) {
+                attachment.element.remove();
+            }
         }
         
         // Remove da lista de entidades

@@ -1,4 +1,5 @@
 import { HasCollision } from "../components/HasCollision.js";
+import { VisualAttachment, HasVisualAttachments } from "../components/HasVisualAttachments.js";
 import { TAMX } from "../config.js";
 import { Entity, EntityType } from "../core/entity.js";
 import { space } from "../space.js";
@@ -9,7 +10,7 @@ const directions = [
   "assets/png/playerRight.png",
 ];
 
-export class Player implements Entity, HasCollision {
+export class Player implements Entity, HasCollision, HasVisualAttachments {
 
   element: HTMLImageElement;
 
@@ -37,6 +38,8 @@ export class Player implements Entity, HasCollision {
 
   direction = 1;
 
+  visualAttachments: VisualAttachment[] = [];
+
   constructor() {
     this.element = document.createElement("img");
 
@@ -48,6 +51,29 @@ export class Player implements Entity, HasCollision {
     this.syncElement();
 
     space.element.appendChild(this.element);
+
+    const shield = document.createElement("img");
+
+    shield.src = "assets/png/shield.png";
+
+    shield.style.position = "absolute";
+
+    shield.style.width = "120px";
+    shield.style.height = "120px";
+
+    shield.style.pointerEvents = "none";
+    shield.style.display = "none";
+
+    space.element.appendChild(shield);
+    this.visualAttachments.push({
+        id: "shield",
+        element: shield,
+        offset: {
+            x: -10,
+            y: -20
+        },
+        isVisible: false
+    });
   }
 
   syncElement() {
