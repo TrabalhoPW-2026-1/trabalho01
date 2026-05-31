@@ -51,7 +51,7 @@ export class ColisionSystem implements System {
                     world.lives -= 1;
 
                     // Ativa invencibilidade
-                    player.activateInvincibility = true;
+                    player.setInvencibility();
                 }
 
                 world.destroyEntity(entity);

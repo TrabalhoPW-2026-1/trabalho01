@@ -90,4 +90,9 @@ export class Player implements Entity, HasCollision, HasVisualAttachments, HasIn
     this.direction = direction;
     this.element.src = directions[this.direction];
   }
+
+  setInvencibility() {
+    this.activateInvincibility = true;
+    this.invincibilityTimeRemaining = INVINCIBILITY_TIME;
+  }
 }
