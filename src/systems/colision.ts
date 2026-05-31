@@ -7,6 +7,7 @@ export class ColisionSystem implements System {
     private readonly collisionPadding = 2;
 
     update(world: World): void {
+        // Recupera a entidade player
         const collisionEntities: (Entity & HasCollision)[] = world.entities.filter(entity => "hitbox" in entity) as (Entity & HasCollision)[];
         const player = collisionEntities.find(entity => entity.type === 'player');
         if (!player) return;
