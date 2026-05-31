@@ -1,3 +1,4 @@
+import { TAMY } from "../config.js";
 import { System } from "../core/system.js";
 import { World } from "../core/world.js";
 
@@ -18,7 +19,7 @@ export class MovementSystem implements System {
         world.entities = world.entities.filter((entity) => {
             if (!("position" in entity)) return true;
 
-            const shouldKeep = entity.position.y <= 900;
+            const shouldKeep = entity.position.y <= TAMY;
             if (!shouldKeep && "element" in entity) {
                 entity.element.remove();
             }

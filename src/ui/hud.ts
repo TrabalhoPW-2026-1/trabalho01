@@ -18,7 +18,8 @@ class HUD {
         this.root.appendChild(this.livesElement);
         this.root.appendChild(this.scoreElement);
 
-        document.body.appendChild(this.root);
+        const space = document.getElementById("space")!;
+        space.appendChild(this.root);
     }
 
     setScore(score: number) {

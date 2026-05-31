@@ -5,6 +5,11 @@
 
 body {
   height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
 }
 
 #space {
@@ -36,7 +41,7 @@ body {
 }
 
 #hud {
-  position: fixed;
+  position: absolute;
 
   top: 20px;
   left: 20px;

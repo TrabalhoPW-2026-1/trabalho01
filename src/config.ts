@@ -1,9 +1,9 @@
 export const FPS = 100
-export const TAMX = document.documentElement.clientWidth
+export const TAMX = Math.min(document.documentElement.clientWidth, 1000)
 export const TAMY = document.documentElement.clientHeight
 
 export const PROB_ENEMY_SHIP = 0.004
-export const PROB_OBSTACLE = 0.015
+export const PROB_OBSTACLE = 0.01
 export const PROB_COIN = 0.001
 export const PROB_POWERUP = 0.001
 export const INVINCIBILITY_TIME = 300
