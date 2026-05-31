@@ -15,12 +15,25 @@ export class InvincibilitySystem implements System {
 			) continue;
 
             if (entity instanceof Player && entity.activateInvincibility) {
-                // Diminui o tempo de invencibilidade
+                // Diminuir o tempo de invencibilidade
                 entity.invincibilityTimeRemaining -= 1;
+
+                // Criar efeito de piscar a cada X frames
+                const blinkFrequency = 10; 
+                const shouldBlink = Math.floor(entity.invincibilityTimeRemaining / blinkFrequency) % 2 === 0;
+                
+                if (shouldBlink) {
+                    entity.element.style.opacity = "1";
+                }
+                else {
+                    entity.element.style.opacity = "0.3";
+                }    
                 
                 // Termina a invencibilidade quando o tempo acaba
-                if (entity.invincibilityTimeRemaining <= 0) 
+                if (entity.invincibilityTimeRemaining <= 0) {
                     entity.activateInvincibility = false;
+                    entity.element.style.opacity = "1";
+                }
             }
         }
 
