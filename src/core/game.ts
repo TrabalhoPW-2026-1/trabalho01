@@ -9,6 +9,7 @@ import { space } from "../space.js"
 import { ColisionSystem } from "../systems/colision.js"
 import { VisualAttachmentSystem } from "../systems/visualAttachment.js"
 import { UISystem } from "../systems/ui.js";
+import { InvincibilitySystem } from "../systems/invincibility.js"
 
 
 export class Game {
@@ -21,7 +22,8 @@ export class Game {
     new MovementSystem(),
     new VisualAttachmentSystem(),
     new ColisionSystem(),
-    new UISystem()
+    new UISystem(),
+    new InvincibilitySystem()
   ];
 
   constructor() {
