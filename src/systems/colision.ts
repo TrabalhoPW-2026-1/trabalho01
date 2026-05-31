@@ -2,7 +2,6 @@ import { Entity } from "../core/entity";
 import { System } from "../core/system";
 import { World } from "../core/world";
 import { HasCollision } from "../components/HasCollision.js";
-import { HasVisualAttachments } from "../components/HasVisualAttachments.js";
 
 export class ColisionSystem implements System {
     private readonly collisionPadding = 2;
@@ -46,38 +45,22 @@ export class ColisionSystem implements System {
                     world.lives -= 1;
                 }
 
-                this.destroyEntity(entity, world);
+                world.destroyEntity(entity);
                 if (world.lives <= 0) world.gameOver();
                 
                 break;
             case "coin":
                 world.score += 1;
-                this.destroyEntity(entity, world);
+                world.destroyEntity(entity);
                 break;
             case "powerup":
                 world.powerupActivate = true;
-                this.destroyEntity(entity, world);
+                world.destroyEntity(entity);
                 break;
             default:
                 console.log(`Strange interaction ocurring between player and ${entity.type}`)
                 break;
         }
 
-    }
-
-    private destroyEntity(entity: Entity, world: World): void {
-        // Remove do DOM se houver elemento HTML
-        if ("element" in entity && entity.element) {
-            entity.element.remove();
-        }
-        if ("visualAttachments" in entity) {
-            const visualAttachments = (entity as HasVisualAttachments).visualAttachments;
-            for (const attachment of visualAttachments) {
-                attachment.element.remove();
-            }
-        }
-        
-        // Remove da lista de entidades
-        world.entities = world.entities.filter(e => e !== entity);
     }
 }
