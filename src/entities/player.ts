@@ -1,6 +1,7 @@
 import { HasCollision } from "../components/HasCollision.js";
+import { HasInvincibility } from "../components/HasInvincibility.js";
 import { VisualAttachment, HasVisualAttachments } from "../components/HasVisualAttachments.js";
-import { TAMX } from "../config.js";
+import { INVINCIBILITY_TIME, TAMX } from "../config.js";
 import { Entity, EntityType } from "../core/entity.js";
 import { space } from "../space.js";
 
@@ -10,7 +11,7 @@ const directions = [
   "assets/png/playerRight.png",
 ];
 
-export class Player implements Entity, HasCollision, HasVisualAttachments {
+export class Player implements Entity, HasCollision, HasVisualAttachments, HasInvincibility {
 
   element: HTMLImageElement;
 
@@ -39,6 +40,10 @@ export class Player implements Entity, HasCollision, HasVisualAttachments {
   direction = 1;
 
   visualAttachments: VisualAttachment[] = [];
+
+  activateInvincibility = true;
+
+  invincibilitytimeRemaining = INVINCIBILITY_TIME; 
 
   constructor() {
     this.element = document.createElement("img");

@@ -6,6 +6,6 @@ export class InvincibilitySystem implements System {
     private readonly invincibilityTime = 100;
 
     update(world: World): void (
-        time: 
+        
     )
 }
