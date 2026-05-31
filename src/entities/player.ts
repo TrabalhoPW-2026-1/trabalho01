@@ -43,7 +43,7 @@ export class Player implements Entity, HasCollision, HasVisualAttachments, HasIn
 
   activateInvincibility = true;
 
-  invincibilitytimeRemaining = INVINCIBILITY_TIME; 
+  invincibilityTimeRemaining = INVINCIBILITY_TIME; 
 
   constructor() {
     this.element = document.createElement("img");

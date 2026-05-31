@@ -1,7 +1,8 @@
-import { Entity } from "../core/entity";
-import { System } from "../core/system";
-import { World } from "../core/world";
+import { Entity } from "../core/entity.js";
+import { System } from "../core/system.js";
+import { World } from "../core/world.js";
 import { HasCollision } from "../components/HasCollision.js";
+import { Player } from "../entities/player.js";
 
 export class ColisionSystem implements System {
     private readonly collisionPadding = 2;
@@ -9,7 +10,7 @@ export class ColisionSystem implements System {
     update(world: World): void {
         // Recupera a entidade player
         const collisionEntities: (Entity & HasCollision)[] = world.entities.filter(entity => "hitbox" in entity) as (Entity & HasCollision)[];
-        const player = collisionEntities.find(entity => entity.type === 'player');
+        const player = collisionEntities.find(entity => entity instanceof Player);
         if (!player) return;
 
         for (const otherEntity of collisionEntities) {
@@ -20,7 +21,7 @@ export class ColisionSystem implements System {
 
             const isColliding = this.checkCollision(player, otherEntity);
             if (isColliding) {
-                this.checkInteractions(otherEntity, world);
+                this.checkInteractions(player, otherEntity, world);
             }
         }
     }
@@ -35,15 +36,22 @@ export class ColisionSystem implements System {
         );
     }
 
-    private checkInteractions(entity: Entity, world: World): void {
+    private checkInteractions(player: Player, entity: Entity, world: World): void {
         switch (entity.type){
             case "obstacle":
-                //escudo
+                if (player.activateInvincibility) 
+                    break;
+
+                // Escudo
                 if (world.powerupActivate) {
                     world.powerupActivate = false;
                 }
+                // Sem escudo
                 else {
                     world.lives -= 1;
+
+                    // Ativa invencibilidade
+                    player.activateInvincibility = true;
                 }
 
                 world.destroyEntity(entity);

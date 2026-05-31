@@ -1,6 +1,6 @@
 import { Component } from '../core/component.js';
 
-export interface HasInvincibility {
+export interface HasInvincibility extends Component{
     activateInvincibility: boolean;
-    invincibilitytimeRemaining: number;
+    invincibilityTimeRemaining: number;
 }

@@ -1,7 +1,7 @@
-import { Entity } from "../core/entity";
-import { System } from "../core/system";
-import { World } from "../core/world";
-import { Player } from "../entities/player";
+import { Entity } from "../core/entity.js";
+import { System } from "../core/system.js";
+import { World } from "../core/world.js";
+import { Player } from "../entities/player.js";
 
 export class InvincibilitySystem implements System {
 
@@ -11,15 +11,15 @@ export class InvincibilitySystem implements System {
             // Ignora entidades que não possuem invencibilidade
             if (
 				!("activateInvincibility" in entity) ||
-				!("invincibilitytimeRemaining" in entity)
+				!("invincibilityTimeRemaining" in entity)
 			) continue;
 
             if (entity instanceof Player && entity.activateInvincibility) {
                 // Diminui o tempo de invencibilidade
-                entity.invincibilitytimeRemaining -= 1;
+                entity.invincibilityTimeRemaining -= 1;
                 
                 // Termina a invencibilidade quando o tempo acaba
-                if (entity.invincibilitytimeRemaining <= 0) 
+                if (entity.invincibilityTimeRemaining <= 0) 
                     entity.activateInvincibility = false;
             }
         }
