@@ -1,44 +1,31 @@
-import { PROB_OBSTACLE, PROB_UFO, PROB_COIN, PROB_POWERUP, PROB_LIFEUP } from "../config.js";
+import { PROB_CAR, PROB_BICYCLE, PROB_TURBO, PROB_HELMET } from "../config.js";
 import { System } from "../core/system.js";
 import { World } from "../core/world.js";
-import { Obstacle } from "../entities/obstacle.js";
-import { UFO } from "../entities/ufo.js";
-import { Coin } from "../entities/coin.js";
-import { PowerUp } from "../entities/powerup.js";
-import { LifeUp } from "../entities/lifeup.js";
+import { Car } from "../entities/car.js";
+import { Bicycle } from "../entities/bicycle.js";
+import { PizzaBox } from "../entities/pizzabox.js";
+import { Customer } from "../entities/customer.js";
+import { Turbo } from "../entities/turbo.js";
+import { Helmet } from "../entities/helmet.js";
 
 export class SpawnSystem implements System {
+  update(world: World): void {
+    if (Math.random() < PROB_CAR) world.entities.push(new Car());
+    if (Math.random() < PROB_BICYCLE) world.entities.push(new Bicycle());
+    if (Math.random() < PROB_TURBO && world.turboTimeRemaining <= 0) {
+      world.entities.push(new Turbo());
+    }
+    if (Math.random() < PROB_HELMET) world.entities.push(new Helmet());
 
-    update(world: World): void {
-        if (Math.random() < PROB_OBSTACLE) world.entities.push(new Obstacle());
-        if (Math.random() < PROB_UFO) world.entities.push(new UFO());
-        if (Math.random() < PROB_COIN) this.spawnCoins(world);
-        if (Math.random() < PROB_POWERUP) this.spawnPowerUp(world);
-        if (Math.random() < PROB_LIFEUP) this.spawnLifeUp(world);
+    const hasCustomer = world.entities.some(e => e.type === "customer");
+    if (!hasCustomer && !world.hasPizza) {
+      world.entities.push(new Customer());
     }
 
-    private spawnCoins(world: World): void {
-        const numCoins = Math.floor(Math.random() * 3) + 2;
-        const x = Math.random() * (document.documentElement.clientWidth - 30);
-        const coinHeight = 30;
-        const spacing = 20;
-
-        let y = -coinHeight;
-        for (let i = 0; i < numCoins; i++) {
-            world.entities.push(new Coin(x, y));
-            y -= (coinHeight + spacing);
-        }
+    const hasPizzaBox = world.entities.some(e => e.type === "pizzabox");
+    const currentHasCustomer = world.entities.some(e => e.type === "customer");
+    if (!hasPizzaBox && !world.hasPizza && currentHasCustomer) {
+      world.entities.push(new PizzaBox());
     }
-
-    private spawnPowerUp(world: World): void {
-        if (world.shields < 3) {
-            const x = Math.random() * (document.documentElement.clientWidth - 40);
-            world.entities.push(new PowerUp(x, -40));
-        }
-    }
-
-    private spawnLifeUp(world: World): void {
-        const x = Math.random() * (document.documentElement.clientWidth - 40);
-        world.entities.push(new LifeUp(x, -40));
-    }
+  }
 }
