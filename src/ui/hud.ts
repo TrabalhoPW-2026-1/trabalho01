@@ -3,16 +3,12 @@ import { MAX_TIP_TIMER } from "../config.js";
 class HUD {
   root: HTMLDivElement;
   scoreEl: HTMLDivElement;
-  livesEl: HTMLDivElement;
   tipTimerEl: HTMLDivElement;
   turboEl: HTMLDivElement;
 
   constructor() {
     this.root = document.createElement("div");
     this.root.id = "hud";
-
-    this.livesEl = document.createElement("div");
-    this.livesEl.classList.add("lives-container");
 
     this.tipTimerEl = document.createElement("div");
     this.tipTimerEl.classList.add("tip-timer");
@@ -25,26 +21,15 @@ class HUD {
 
     this.scoreEl = document.createElement("div");
 
-    this.root.appendChild(this.livesEl);
+    this.root.appendChild(this.scoreEl);
     this.root.appendChild(this.tipTimerEl);
     this.root.appendChild(this.turboEl);
-    this.root.appendChild(this.scoreEl);
 
     document.getElementById("road")!.appendChild(this.root);
   }
 
   setScore(score: number) {
     this.scoreEl.innerHTML = `💰 ${score} pts`;
-  }
-
-  setLives(lives: number) {
-    this.livesEl.innerHTML = "";
-    for (let i = 0; i < lives; i++) {
-      const h = document.createElement("span");
-      h.textContent = "❤️";
-      h.style.fontSize = "24px";
-      this.livesEl.appendChild(h);
-    }
   }
 
   setTipTimer(timer: number, hasPizza: boolean) {

@@ -7,7 +7,7 @@ import { SpawnSystem } from "../systems/spawn.js";
 import { MovementSystem } from "../systems/movement.js";
 import { CollisionSystem } from "../systems/collision.js";
 import { VisualAttachmentSystem } from "../systems/visualAttachment.js";
-import { InvincibilitySystem } from "../systems/invincibility.js";
+import { AlertSystem } from "../systems/alert.js";
 import { DeliverySystem } from "../systems/delivery.js";
 import { UISystem } from "../systems/ui.js";
 import { road } from "../road.js";
@@ -27,11 +27,11 @@ export class Game {
     new InputSystem(),
     new SpawnSystem(),
     new MovementSystem(),
+    new AlertSystem(),
     new VisualAttachmentSystem(),
     new CollisionSystem(),
     new DeliverySystem(),
     new UISystem(),
-    new InvincibilitySystem(),
   ];
 
   constructor() {

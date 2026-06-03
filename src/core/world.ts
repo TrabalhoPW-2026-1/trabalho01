@@ -4,7 +4,6 @@ import { HasVisualAttachments } from "../components/HasVisualAttachments.js";
 export class World {
   entities: Entity[] = [];
   score: number = 0;
-  lives: number = 3;
   hasPizza: boolean = false;
   tipTimer: number = 0;
   turboTimeRemaining: number = 0;
@@ -21,6 +20,9 @@ export class World {
       for (const a of (entity as HasVisualAttachments).visualAttachments) {
         a.element.remove();
       }
+    }
+    if ("alertElement" in entity) {
+      ((entity as unknown) as { alertElement: HTMLElement }).alertElement.remove();
     }
     this.entities = this.entities.filter(e => e !== entity);
   }

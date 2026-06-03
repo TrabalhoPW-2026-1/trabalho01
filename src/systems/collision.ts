@@ -17,16 +17,19 @@ export class CollisionSystem implements System {
 
     for (const other of collidables) {
       if (other === player) continue;
-      if (!this.overlaps(player, other)) continue;
 
       switch (other.type) {
         case "car":
         case "bicycle":
-          this.handleObstacleHit(player, other, world);
+          if (this.overlaps(player, other)) {
+            world.destroyEntity(other);
+            world.gameOver();
+            return;
+          }
           break;
 
         case "pizzabox":
-          if (!world.hasPizza) {
+          if (!world.hasPizza && this.overlaps(player, other)) {
             world.hasPizza = true;
             world.tipTimer = MAX_TIP_TIMER;
             world.destroyEntity(other);
@@ -34,19 +37,16 @@ export class CollisionSystem implements System {
           break;
 
         case "customer":
-          if (world.hasPizza) {
-            this.handleDelivery(other as Customer, world);
+          if (world.hasPizza && !player.switching) {
+            this.checkDelivery(player, other as Customer, world);
           }
           break;
 
         case "turbo":
-          world.turboTimeRemaining = 300;
-          world.destroyEntity(other);
-          break;
-
-        case "helmet":
-          world.lives += 1;
-          world.destroyEntity(other);
+          if (this.overlaps(player, other)) {
+            world.turboTimeRemaining = 300;
+            world.destroyEntity(other);
+          }
           break;
       }
     }
@@ -61,22 +61,18 @@ export class CollisionSystem implements System {
     );
   }
 
-  private handleObstacleHit(player: Player, entity: Entity, world: World): void {
-    if (player.activateInvincibility) return;
+  private checkDelivery(player: Player, customer: Customer, world: World): void {
+    const laneMatch =
+      (customer.side === "left" && player.lane === 0) ||
+      (customer.side === "right" && player.lane === 2);
+    if (!laneMatch) return;
 
-    if (world.hasPizza) {
-      world.hasPizza = false;
-      world.tipTimer = 0;
-    }
+    const playerBottom = player.position.y + player.hitbox.height;
+    const playerTop = player.position.y;
+    const customerTop = customer.position.y;
+    const customerBottom = customer.position.y + customer.hitbox.height;
+    if (playerBottom < customerTop || playerTop > customerBottom) return;
 
-    world.lives -= 1;
-    player.setInvencibility();
-    world.destroyEntity(entity);
-
-    if (world.lives <= 0) world.gameOver();
-  }
-
-  private handleDelivery(customer: Customer, world: World): void {
     const tip = Math.max(10, Math.floor((world.tipTimer / MAX_TIP_TIMER) * 100));
     world.score += tip;
     world.hasPizza = false;

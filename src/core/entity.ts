@@ -4,8 +4,7 @@ export type EntityType =
   | 'bicycle'
   | 'pizzabox'
   | 'customer'
-  | 'turbo'
-  | 'helmet';
+  | 'turbo';
 
 export interface Entity {
   element: HTMLElement;

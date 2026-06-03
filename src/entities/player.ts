@@ -1,25 +1,31 @@
 import { HasCollision } from "../components/HasCollision.js";
-import { HasInvincibility } from "../components/HasInvincibility.js";
 import { HasVisualAttachments, VisualAttachment } from "../components/HasVisualAttachments.js";
-import { INVINCIBILITY_TIME, TAMX, TAMY } from "../config.js";
+import { laneX, TAMY } from "../config.js";
 import { Entity, EntityType } from "../core/entity.js";
 import { road } from "../road.js";
 
-export class Player implements Entity, HasCollision, HasInvincibility, HasVisualAttachments {
+export class Player implements Entity, HasCollision, HasVisualAttachments {
   element: HTMLElement;
 
-  position = { x: TAMX / 2 - 30, y: TAMY - 130 };
+  position = { x: 0, y: TAMY - 130 };
   velocity = { x: 0, y: 0 };
   size = { width: 60, height: 50 };
   hitbox = { width: 50, height: 40 };
   type: EntityType = "player";
 
-  activateInvincibility = false;
-  invincibilityTimeRemaining = INVINCIBILITY_TIME;
-
   visualAttachments: VisualAttachment[] = [];
 
+  lane = 1;
+  fromLane = 1;
+  targetLane = 1;
+  fromX = 0;
+  driftProgress = 1;
+  switching = false;
+
   constructor() {
+    this.position.x = laneX(1) - this.size.width / 2;
+    this.fromX = this.position.x;
+
     this.element = document.createElement("div");
     this.element.id = "moto";
     this.element.textContent = "🏍️";
@@ -28,6 +34,7 @@ export class Player implements Entity, HasCollision, HasInvincibility, HasVisual
     this.element.style.position = "absolute";
     this.element.style.userSelect = "none";
     this.element.style.cursor = "default";
+    this.element.style.transformOrigin = "center bottom";
 
     this.syncElement();
     road.element.appendChild(this.element);
@@ -53,12 +60,17 @@ export class Player implements Entity, HasCollision, HasInvincibility, HasVisual
     this.element.style.top = `${this.position.y}px`;
   }
 
-  setDirection(dir: number) {
-    this.element.style.transform = dir === 0 ? "scaleX(-1)" : "scaleX(1)";
+  startSwitch(dir: -1 | 1): void {
+    const newLane = this.lane + dir;
+    if (newLane < 0 || newLane > 2) return;
+    this.fromLane = this.lane;
+    this.fromX = this.position.x;
+    this.targetLane = newLane;
+    this.driftProgress = 0;
+    this.switching = true;
   }
 
-  setInvencibility() {
-    this.activateInvincibility = true;
-    this.invincibilityTimeRemaining = INVINCIBILITY_TIME;
+  getLaneX(lane: number): number {
+    return laneX(lane) - this.size.width / 2;
   }
 }
