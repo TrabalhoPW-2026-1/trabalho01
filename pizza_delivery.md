@@ -39,7 +39,7 @@ Jogo de corrida/entrega top-down ou side-scrolling. O jogador controla um entreg
 
 ## Sistemas
 
-* **Sistema de controle** — WASD/setas movem a moto
+* **Sistema de controle** — setas direita e esquerda movem a moto
 * **Sistema de movimento** — aplica velocidade, fricção leve
 * **Sistema de colisão** — bate em carro → perde pizza/vida
 * **Sistema de pedidos** — gera novos clientes periodicamente
