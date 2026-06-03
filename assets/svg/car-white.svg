@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 76" width="54" height="76">
+  <!-- Wheels -->
+  <rect x="0" y="7" width="11" height="19" rx="3" fill="#111"/>
+  <rect x="43" y="7" width="11" height="19" rx="3" fill="#111"/>
+  <rect x="0" y="50" width="11" height="19" rx="3" fill="#111"/>
+  <rect x="43" y="50" width="11" height="19" rx="3" fill="#111"/>
+  <!-- Wheel rims -->
+  <rect x="2" y="9" width="7" height="15" rx="2" fill="#333"/>
+  <rect x="45" y="9" width="7" height="15" rx="2" fill="#333"/>
+  <rect x="2" y="52" width="7" height="15" rx="2" fill="#333"/>
+  <rect x="45" y="52" width="7" height="15" rx="2" fill="#333"/>
+  <!-- Main body -->
+  <rect x="1" y="5" width="52" height="66" rx="8" fill="#dddddd"/>
+  <!-- Roof/cabin -->
+  <rect x="9" y="18" width="36" height="34" rx="5" fill="#cccccc"/>
+  <!-- Front windshield -->
+  <rect x="11" y="13" width="32" height="11" rx="3" fill="#aaddff" opacity="0.82"/>
+  <!-- Rear windshield -->
+  <rect x="11" y="50" width="32" height="11" rx="3" fill="#aaddff" opacity="0.62"/>
+  <!-- Headlights -->
+  <rect x="9" y="5" width="11" height="6" rx="2" fill="#ffffcc"/>
+  <rect x="34" y="5" width="11" height="6" rx="2" fill="#ffffcc"/>
+  <!-- Taillights -->
+  <rect x="9" y="65" width="11" height="6" rx="2" fill="#ff4444"/>
+  <rect x="34" y="65" width="11" height="6" rx="2" fill="#ff4444"/>
+</svg>

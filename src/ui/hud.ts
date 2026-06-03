@@ -1,52 +1,74 @@
+import { MAX_TIP_TIMER } from "../config.js";
+
 class HUD {
+  root: HTMLDivElement;
+  scoreEl: HTMLDivElement;
+  livesEl: HTMLDivElement;
+  tipTimerEl: HTMLDivElement;
+  turboEl: HTMLDivElement;
 
-    root: HTMLDivElement;
-    scoreElement: HTMLDivElement;
-    livesElement: HTMLDivElement;
-    shieldsElement: HTMLDivElement;
+  constructor() {
+    this.root = document.createElement("div");
+    this.root.id = "hud";
 
-    constructor() {
-        this.root = document.createElement("div");
-        this.root.id = "hud";
+    this.livesEl = document.createElement("div");
+    this.livesEl.classList.add("lives-container");
 
-        this.scoreElement  = document.createElement("div");
-        this.livesElement  = document.createElement("div");
-        this.shieldsElement = document.createElement("div");
+    this.tipTimerEl = document.createElement("div");
+    this.tipTimerEl.classList.add("tip-timer");
+    this.tipTimerEl.style.display = "none";
 
-        this.livesElement.classList.add("lives-container");
-        this.shieldsElement.classList.add("shields-container");
+    this.turboEl = document.createElement("div");
+    this.turboEl.classList.add("turbo-indicator");
+    this.turboEl.textContent = "⚡ TURBO";
+    this.turboEl.style.display = "none";
 
-        this.root.appendChild(this.livesElement);
-        this.root.appendChild(this.shieldsElement);
-        this.root.appendChild(this.scoreElement);
+    this.scoreEl = document.createElement("div");
 
-        const space = document.getElementById("space")!;
-        space.appendChild(this.root);
+    this.root.appendChild(this.livesEl);
+    this.root.appendChild(this.tipTimerEl);
+    this.root.appendChild(this.turboEl);
+    this.root.appendChild(this.scoreEl);
+
+    document.getElementById("road")!.appendChild(this.root);
+  }
+
+  setScore(score: number) {
+    this.scoreEl.innerHTML = `💰 ${score} pts`;
+  }
+
+  setLives(lives: number) {
+    this.livesEl.innerHTML = "";
+    for (let i = 0; i < lives; i++) {
+      const h = document.createElement("span");
+      h.textContent = "❤️";
+      h.style.fontSize = "22px";
+      this.livesEl.appendChild(h);
+    }
+  }
+
+  setTipTimer(timer: number, hasPizza: boolean) {
+    if (!hasPizza) {
+      this.tipTimerEl.style.display = "none";
+      return;
     }
 
-    setScore(score: number) {
-        this.scoreElement.innerHTML = `<img src="assets/png/coin.png"> ${score}`;
-    }
+    this.tipTimerEl.style.display = "flex";
+    const pct = timer / MAX_TIP_TIMER;
+    const tip = Math.max(10, Math.round(pct * 100));
+    const color = pct > 0.5 ? "#00cc44" : pct > 0.25 ? "#ffcc00" : "#ff3333";
 
-    setLives(lives: number) {
-        this.livesElement.innerHTML = "";
-        for (let i = 0; i < lives; i++) {
-            const heart = document.createElement("img");
-            heart.src = "assets/png/heart.png";
-            heart.classList.add("heart");
-            this.livesElement.appendChild(heart);
-        }
-    }
+    this.tipTimerEl.innerHTML = `
+      <span>🍕 gorjeta: ${tip} pts</span>
+      <div class="tip-bar-bg">
+        <div class="tip-bar" style="width:${pct * 100}%; background:${color}"></div>
+      </div>
+    `;
+  }
 
-    setShields(shields: number) {
-        this.shieldsElement.innerHTML = "";
-        for (let i = 0; i < shields; i++) {
-            const icon = document.createElement("img");
-            icon.src = "assets/png/shield.png";
-            icon.classList.add("shield-icon");
-            this.shieldsElement.appendChild(icon);
-        }
-    }
+  setTurbo(active: boolean) {
+    this.turboEl.style.display = active ? "block" : "none";
+  }
 }
 
 export const hud = new HUD();

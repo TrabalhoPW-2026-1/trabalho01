@@ -1,25 +1,26 @@
-import { FPS } from "../config.js"
-import { World } from "./world.js"
-import { Player } from "../entities/player.js"
-import { System } from "./system.js"
-import { InputSystem } from "../systems/input.js"
-import { SpawnSystem } from "../systems/spawn.js"
-import { MovementSystem } from "../systems/movement.js"
-import { space } from "../space.js"
-import { ColisionSystem } from "../systems/colision.js"
-import { VisualAttachmentSystem } from "../systems/visualAttachment.js"
+import { FPS } from "../config.js";
+import { World } from "./world.js";
+import { Player } from "../entities/player.js";
+import { System } from "./system.js";
+import { InputSystem } from "../systems/input.js";
+import { SpawnSystem } from "../systems/spawn.js";
+import { MovementSystem } from "../systems/movement.js";
+import { road } from "../road.js";
+import { ColisionSystem } from "../systems/colision.js";
+import { VisualAttachmentSystem } from "../systems/visualAttachment.js";
 import { UISystem } from "../systems/ui.js";
-import { InvincibilitySystem } from "../systems/invincibility.js"
+import { InvincibilitySystem } from "../systems/invincibility.js";
+import { DeliverySystem } from "../systems/delivery.js";
 
-const HIGH_SCORE_KEY = 'highScore';
+const HIGH_SCORE_KEY = "pizzaHighScore";
 
 export function getHighScore(): number {
-    return parseInt(localStorage.getItem(HIGH_SCORE_KEY) ?? '0', 10);
+  return parseInt(localStorage.getItem(HIGH_SCORE_KEY) ?? "0", 10);
 }
 
 export class Game {
   private world: World = new World();
-  private intervalo: number | undefined;
+  private interval: number | undefined;
   private paused = false;
 
   private systems: System[] = [
@@ -28,19 +29,18 @@ export class Game {
     new MovementSystem(),
     new VisualAttachmentSystem(),
     new ColisionSystem(),
+    new DeliverySystem(),
     new UISystem(),
-    new InvincibilitySystem()
+    new InvincibilitySystem(),
   ];
 
   constructor() {
-    const player = new Player();
-    this.world.entities.push(player);
-
+    this.world.entities.push(new Player());
     this.world.onGameOver = () => this.stop();
   }
 
   start() {
-    this.intervalo = setInterval(() => { this.update(); }, 500 / FPS);
+    this.interval = setInterval(() => this.update(), 1000 / FPS);
 
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
@@ -56,62 +56,50 @@ export class Game {
   }
 
   pause(): void {
-    if (!this.intervalo) return;
-    clearInterval(this.intervalo);
-    this.intervalo = undefined;
+    if (!this.interval) return;
+    clearInterval(this.interval);
+    this.interval = undefined;
     this.paused = true;
 
-    const menu = document.getElementById("menu")!;
-    const playBtn = document.getElementById("menu-play")!;
-    const highScoreEl = document.getElementById("menu-highscore")!;
-
     const hs = getHighScore();
-    highScoreEl.textContent = hs > 0 ? `Recorde: ${hs} moedas` : '';
-    playBtn.textContent = "Continuar";
-    menu.style.display = "flex";
-
-    playBtn.addEventListener("click", () => this.resume(), { once: true });
+    document.getElementById("menu-highscore")!.textContent =
+      hs > 0 ? `Recorde: ${hs} pts` : "";
+    document.getElementById("menu-play")!.textContent = "Continuar";
+    document.getElementById("menu")!.style.display = "flex";
+    document.getElementById("menu-play")!
+      .addEventListener("click", () => this.resume(), { once: true });
   }
 
   resume(): void {
     if (!this.paused) return;
-    const menu = document.getElementById("menu")!;
-    const playBtn = document.getElementById("menu-play")!;
-
-    menu.style.display = "none";
-    playBtn.textContent = "Jogar";
+    document.getElementById("menu")!.style.display = "none";
+    document.getElementById("menu-play")!.textContent = "Jogar";
     this.paused = false;
-    this.intervalo = setInterval(() => { this.update(); }, 500 / FPS);
+    this.interval = setInterval(() => this.update(), 1000 / FPS);
   }
 
   stop(): void {
-    if (this.intervalo) {
-      clearInterval(this.intervalo);
-      this.intervalo = undefined;
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = undefined;
     }
-    this.paused = false;
 
     const score = this.world.score;
     const prev = getHighScore();
-    const isNewRecord = score > prev;
-
-    if (isNewRecord) {
-      localStorage.setItem(HIGH_SCORE_KEY, String(score));
-    }
+    const isNew = score > prev;
+    if (isNew) localStorage.setItem(HIGH_SCORE_KEY, String(score));
 
     setTimeout(() => {
-      const msg = isNewRecord
-        ? `Game Over! Novo recorde: ${score} moedas!`
-        : `Game Over! Pontuação: ${score} moedas. Recorde: ${Math.max(score, prev)}.`;
+      const msg = isNew
+        ? `Game Over! Novo recorde: ${score} pts!`
+        : `Game Over! Gorjetas: ${score} pts. Recorde: ${Math.max(score, prev)} pts.`;
       alert(msg);
       window.location.reload();
     }, 300);
   }
 
   update() {
-    for (const system of this.systems) {
-      system.update(this.world);
-    }
-    space.move();
+    for (const system of this.systems) system.update(this.world);
+    road.move();
   }
 }

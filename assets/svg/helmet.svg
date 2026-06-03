@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <!-- Outer shell -->
+  <circle cx="20" cy="20" r="18" fill="#cc2200"/>
+  <!-- Shell shading -->
+  <circle cx="20" cy="20" r="15" fill="#dd3311"/>
+  <!-- Top ridge -->
+  <rect x="18" y="2" width="4" height="16" rx="2" fill="#ee4422" opacity="0.7"/>
+  <!-- Visor -->
+  <rect x="7" y="16" width="26" height="12" rx="5" fill="#77bbdd" opacity="0.9"/>
+  <!-- Visor glare -->
+  <rect x="9" y="17" width="10" height="4" rx="2" fill="white" opacity="0.45"/>
+  <!-- Chin guard -->
+  <rect x="6" y="27" width="28" height="8" rx="4" fill="#aa1100"/>
+  <!-- Chin strap dots -->
+  <circle cx="11" cy="31" r="2" fill="#881100"/>
+  <circle cx="29" cy="31" r="2" fill="#881100"/>
+</svg>

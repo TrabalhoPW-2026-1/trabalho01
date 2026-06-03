@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 64" width="48" height="64">
+  <!-- Shadow -->
+  <ellipse cx="24" cy="60" rx="14" ry="4" fill="#00000033"/>
+  <!-- Legs -->
+  <rect x="13" y="46" width="9" height="14" rx="4" fill="#1a1a44"/>
+  <rect x="26" y="46" width="9" height="14" rx="4" fill="#1a1a44"/>
+  <!-- Shoes -->
+  <ellipse cx="17" cy="60" rx="6" ry="3" fill="#333"/>
+  <ellipse cx="31" cy="60" rx="6" ry="3" fill="#333"/>
+  <!-- Body -->
+  <rect x="10" y="22" width="28" height="28" rx="6" fill="#4499cc"/>
+  <!-- Pocket -->
+  <rect x="20" y="30" width="8" height="10" rx="2" fill="#3388bb"/>
+  <!-- Arms -->
+  <rect x="2" y="24" width="10" height="8" rx="4" fill="#4499cc"/>
+  <rect x="36" y="24" width="10" height="8" rx="4" fill="#4499cc"/>
+  <!-- Hands -->
+  <circle cx="5" cy="28" r="4.5" fill="#f5c58a"/>
+  <circle cx="43" cy="28" r="4.5" fill="#f5c58a"/>
+  <!-- Neck -->
+  <rect x="20" y="18" width="8" height="6" rx="3" fill="#f5c58a"/>
+  <!-- Head -->
+  <circle cx="24" cy="13" r="12" fill="#f5c58a"/>
+  <!-- Hair -->
+  <path d="M12 11 Q24 2 36 11 Q36 6 24 4 Q12 6 12 11Z" fill="#4a2800"/>
+  <!-- Eyes -->
+  <circle cx="19" cy="12" r="2" fill="#2a1800"/>
+  <circle cx="29" cy="12" r="2" fill="#2a1800"/>
+  <!-- Smile -->
+  <path d="M19 17 Q24 21 29 17" stroke="#2a1800" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>

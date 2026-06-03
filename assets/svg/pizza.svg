@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="44" height="44">
+  <!-- Box -->
+  <rect x="0" y="0" width="44" height="44" rx="4" fill="#c87c3e"/>
+  <!-- Box fold lines -->
+  <line x1="0" y1="0" x2="44" y2="44" stroke="#a05e28" stroke-width="1" opacity="0.4"/>
+  <line x1="44" y1="0" x2="0" y2="44" stroke="#a05e28" stroke-width="1" opacity="0.4"/>
+  <!-- Pizza base (crust) -->
+  <circle cx="22" cy="22" r="18" fill="#e8a040"/>
+  <!-- Sauce -->
+  <circle cx="22" cy="22" r="14" fill="#cc3300"/>
+  <!-- Cheese -->
+  <circle cx="22" cy="22" r="12" fill="#f0cc44"/>
+  <!-- Slice lines -->
+  <line x1="22" y1="4" x2="22" y2="40" stroke="#c87c3e" stroke-width="1.2" opacity="0.6"/>
+  <line x1="4" y1="22" x2="40" y2="22" stroke="#c87c3e" stroke-width="1.2" opacity="0.6"/>
+  <line x1="9.2" y1="9.2" x2="34.8" y2="34.8" stroke="#c87c3e" stroke-width="1.2" opacity="0.6"/>
+  <line x1="34.8" y1="9.2" x2="9.2" y2="34.8" stroke="#c87c3e" stroke-width="1.2" opacity="0.6"/>
+  <!-- Pepperoni -->
+  <circle cx="22" cy="15" r="3.5" fill="#881100"/>
+  <circle cx="15" cy="26" r="3.5" fill="#881100"/>
+  <circle cx="29" cy="26" r="3.5" fill="#881100"/>
+  <!-- Pepperoni shine -->
+  <circle cx="21" cy="14" r="1.2" fill="#cc2200" opacity="0.6"/>
+  <circle cx="14" cy="25" r="1.2" fill="#cc2200" opacity="0.6"/>
+  <circle cx="28" cy="25" r="1.2" fill="#cc2200" opacity="0.6"/>
+</svg>

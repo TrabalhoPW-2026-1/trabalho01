@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 70" width="44" height="70">
+  <!-- Rear wheel -->
+  <circle cx="22" cy="58" r="10" fill="#1a1a1a"/>
+  <circle cx="22" cy="58" r="7" fill="#2d2d2d"/>
+  <circle cx="22" cy="58" r="3" fill="#555"/>
+  <!-- Front wheel -->
+  <circle cx="22" cy="12" r="10" fill="#1a1a1a"/>
+  <circle cx="22" cy="12" r="7" fill="#2d2d2d"/>
+  <circle cx="22" cy="12" r="3" fill="#555"/>
+  <!-- Frame (chain stay + seat stay) -->
+  <line x1="22" y1="12" x2="22" y2="58" stroke="#888" stroke-width="3.5"/>
+  <line x1="22" y1="40" x2="13" y2="52" stroke="#888" stroke-width="2.5"/>
+  <line x1="22" y1="40" x2="31" y2="52" stroke="#888" stroke-width="2.5"/>
+  <!-- Handlebars -->
+  <rect x="10" y="14" width="24" height="5" rx="2.5" fill="#555"/>
+  <!-- Rider body (top-down jacket) -->
+  <ellipse cx="22" cy="32" rx="8" ry="11" fill="#2266bb"/>
+  <!-- Rider head -->
+  <circle cx="22" cy="20" r="8" fill="#ffcc88"/>
+  <!-- Helmet -->
+  <path d="M14 18 Q22 10 30 18 Q30 25 22 26 Q14 25 14 18Z" fill="#229922"/>
+  <!-- Helmet strap -->
+  <rect x="19" y="24" width="6" height="3" rx="1.5" fill="#996600"/>
+</svg>
