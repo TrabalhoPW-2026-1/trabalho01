@@ -8,7 +8,7 @@ export class World {
 	entities: Entity[] = [];
 	score: number = 0;
 	lives: number = 3;
-	powerupActivate: boolean = false; 
+	shields: number = 0;
 	onGameOver: () => void = () => {};
 	// A cada loop deve ser resetado
 	keyboard: { [key: string]: boolean } = {};

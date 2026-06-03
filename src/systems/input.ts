@@ -11,14 +11,19 @@ export class InputSystem implements System {
 
     if (!ship) return;
 
-    ship.velocity.x = 0;
-	const [left, right] = [world.keyboard["ArrowLeft"], world.keyboard["ArrowRight"]];
-	if ((left && right) || (!left && !right)) {
-		ship.setDirection(1);
-		ship.velocity.x = 0;
-		return;
-	}
-	ship.velocity.x = left ? -3 : right ? 3 : 0;
-	ship.setDirection(left ? 0 :  2);
+    const left  = world.keyboard["ArrowLeft"];
+    const right = world.keyboard["ArrowRight"];
+    const up    = world.keyboard["ArrowUp"];
+    const down  = world.keyboard["ArrowDown"];
+
+    if ((left && right) || (!left && !right)) {
+      ship.velocity.x = 0;
+      ship.setDirection(1);
+    } else {
+      ship.velocity.x = left ? -3 : 3;
+      ship.setDirection(left ? 0 : 2);
+    }
+
+    ship.velocity.y = up ? -3 : down ? 3 : 0;
   }
 }

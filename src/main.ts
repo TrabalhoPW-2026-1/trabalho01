@@ -1,4 +1,20 @@
-import { Game } from "./core/game.js";
+import { Game, getHighScore } from "./core/game.js";
 
-const game = new Game();
-game.start();
+function showMenu(): void {
+    const menu = document.getElementById("menu")!;
+    const highScoreEl = document.getElementById("menu-highscore")!;
+    const playBtn = document.getElementById("menu-play")!;
+
+    const hs = getHighScore();
+    highScoreEl.textContent = hs > 0 ? `Recorde: ${hs} moedas` : '';
+
+    menu.style.display = "flex";
+
+    playBtn.addEventListener("click", () => {
+        menu.style.display = "none";
+        const game = new Game();
+        game.start();
+    }, { once: true });
+}
+
+showMenu();

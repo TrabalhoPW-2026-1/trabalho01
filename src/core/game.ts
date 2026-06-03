@@ -11,10 +11,16 @@ import { VisualAttachmentSystem } from "../systems/visualAttachment.js"
 import { UISystem } from "../systems/ui.js";
 import { InvincibilitySystem } from "../systems/invincibility.js"
 
+const HIGH_SCORE_KEY = 'highScore';
+
+export function getHighScore(): number {
+    return parseInt(localStorage.getItem(HIGH_SCORE_KEY) ?? '0', 10);
+}
 
 export class Game {
   private world: World = new World();
   private intervalo: number | undefined;
+  private paused = false;
 
   private systems: System[] = [
     new InputSystem(),
@@ -27,20 +33,20 @@ export class Game {
   ];
 
   constructor() {
-    // Inicializa o estado do jogo, criando o jogador e adicionando à lista de entidades
     const player = new Player();
     this.world.entities.push(player);
 
     this.world.onGameOver = () => this.stop();
   }
 
-  /**
-   * Inicia o ciclo de vida do jogo
-   */
   start() {
     this.intervalo = setInterval(() => { this.update(); }, 500 / FPS);
 
     window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        this.paused ? this.resume() : this.pause();
+        return;
+      }
       this.world.keyboard[e.key] = true;
     });
 
@@ -49,20 +55,59 @@ export class Game {
     });
   }
 
+  pause(): void {
+    if (!this.intervalo) return;
+    clearInterval(this.intervalo);
+    this.intervalo = undefined;
+    this.paused = true;
+
+    const menu = document.getElementById("menu")!;
+    const playBtn = document.getElementById("menu-play")!;
+    const highScoreEl = document.getElementById("menu-highscore")!;
+
+    const hs = getHighScore();
+    highScoreEl.textContent = hs > 0 ? `Recorde: ${hs} moedas` : '';
+    playBtn.textContent = "Continuar";
+    menu.style.display = "flex";
+
+    playBtn.addEventListener("click", () => this.resume(), { once: true });
+  }
+
+  resume(): void {
+    if (!this.paused) return;
+    const menu = document.getElementById("menu")!;
+    const playBtn = document.getElementById("menu-play")!;
+
+    menu.style.display = "none";
+    playBtn.textContent = "Jogar";
+    this.paused = false;
+    this.intervalo = setInterval(() => { this.update(); }, 500 / FPS);
+  }
+
   stop(): void {
     if (this.intervalo) {
       clearInterval(this.intervalo);
       this.intervalo = undefined;
-      setTimeout(() => {
-        alert("Game Over! Sua pontuação final foi: " + this.world.score);
-        window.location.reload();
-      }, 300)
     }
+    this.paused = false;
+
+    const score = this.world.score;
+    const prev = getHighScore();
+    const isNewRecord = score > prev;
+
+    if (isNewRecord) {
+      localStorage.setItem(HIGH_SCORE_KEY, String(score));
+    }
+
+    setTimeout(() => {
+      const msg = isNewRecord
+        ? `Game Over! Novo recorde: ${score} moedas!`
+        : `Game Over! Pontuação: ${score} moedas. Recorde: ${Math.max(score, prev)}.`;
+      alert(msg);
+      window.location.reload();
+    }, 300);
   }
 
-  /**
-   * Executa um ciclo de atualização do jogo, chamando o método update de cada sistema
-   */
   update() {
     for (const system of this.systems) {
       system.update(this.world);

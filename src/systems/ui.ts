@@ -7,5 +7,6 @@ export class UISystem implements System {
     update(world: World): void {
         hud.setScore(world.score);
         hud.setLives(world.lives);
+        hud.setShields(world.shields);
     }
 }

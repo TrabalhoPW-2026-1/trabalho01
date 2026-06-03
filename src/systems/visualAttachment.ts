@@ -20,7 +20,7 @@ export class VisualAttachmentSystem implements System {
 				);
 
 				if (shield) {
-					shield.isVisible = world.powerupActivate;
+					shield.isVisible = world.shields > 0;
 				}
 			}
 
