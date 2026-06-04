@@ -18,13 +18,13 @@ export class SpawnSystem implements System {
     if (Math.random() < PROB_HELMET) world.entities.push(new Helmet());
 
     const hasCustomer = world.entities.some(e => e.type === "customer");
-    if (!hasCustomer && !world.hasPizza) {
+    const hasPizzaBox = world.entities.some(e => e.type === "pizzabox");
+
+    if (world.hasPizza && !hasCustomer) {
       world.entities.push(new Customer());
     }
 
-    const hasPizzaBox = world.entities.some(e => e.type === "pizzabox");
-    const customerReady = world.entities.some(e => e.type === "customer");
-    if (!hasPizzaBox && !world.hasPizza && customerReady) {
+    if (!world.hasPizza && !hasPizzaBox) {
       world.entities.push(new PizzaBox());
     }
   }

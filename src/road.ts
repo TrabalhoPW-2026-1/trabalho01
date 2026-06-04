@@ -1,4 +1,4 @@
-import { TAMX, TAMY } from "./config.js";
+import { ROAD_SPEED, TAMX, TAMY } from "./config.js";
 
 class Road {
   element: HTMLElement;
@@ -12,7 +12,7 @@ class Road {
   }
 
   move() {
-    this.offsetY = (this.offsetY + 2) % 140;
+    this.offsetY = (this.offsetY + ROAD_SPEED) % 140;
     this.element.style.backgroundPosition =
       `calc(50% - 4px) ${this.offsetY}px, 0px 0px`;
   }

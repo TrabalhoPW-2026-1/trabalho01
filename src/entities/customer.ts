@@ -1,12 +1,12 @@
 import { HasCollision } from "../components/HasCollision.js";
 import { Entity, EntityType } from "../core/entity.js";
-import { CUSTOMER_WAIT_TIME, TAMX, TAMY } from "../config.js";
+import { CUSTOMER_WAIT_TIME, ROAD_SPEED, TAMX, TAMY } from "../config.js";
 import { road } from "../road.js";
 
 export class Customer implements Entity, HasCollision {
   element: HTMLElement;
   position: { x: number; y: number };
-  velocity: { x: number; y: number } = { x: 0, y: 0 };
+  velocity: { x: number; y: number } = { x: 0, y: ROAD_SPEED };
   size: { width: number; height: number };
   hitbox: { width: number; height: number };
   type: EntityType = "customer";
@@ -15,8 +15,12 @@ export class Customer implements Entity, HasCollision {
   private timerBar: HTMLElement;
 
   constructor() {
-    const margin = TAMX * 0.12;
-    const x = margin + Math.random() * (TAMX * 0.76 - 50);
+    const customerWidth = 40;
+    const customerHeight = 60;
+    const sidewalkWidth = TAMX * 0.08;
+    const leftX = Math.random() * Math.max(sidewalkWidth - customerWidth, 0);
+    const rightX = TAMX - sidewalkWidth + Math.random() * Math.max(sidewalkWidth - customerWidth, 0);
+    const x = Math.random() < 0.5 ? leftX : rightX;
 
     this.element = document.createElement("div");
     this.element.style.position = "absolute";
@@ -27,8 +31,8 @@ export class Customer implements Entity, HasCollision {
 
     const img = document.createElement("img");
     img.src = "assets/svg/customer.svg";
-    img.style.width = "48px";
-    img.style.height = "64px";
+    img.style.width = "36px";
+    img.style.height = "48px";
     img.draggable = false;
 
     const barBg = document.createElement("div");
@@ -48,9 +52,9 @@ export class Customer implements Entity, HasCollision {
     this.element.appendChild(img);
     this.element.appendChild(barBg);
 
-    this.position = { x, y: TAMY - 115 };
-    this.size = { width: 50, height: 74 };
-    this.hitbox = { width: 40, height: 68 };
+    this.position = { x, y: -80 };
+    this.size = { width: customerWidth, height: customerHeight };
+    this.hitbox = { width: 32, height: 52 };
 
     this.element.style.left = `${this.position.x}px`;
     this.element.style.top = `${this.position.y}px`;
