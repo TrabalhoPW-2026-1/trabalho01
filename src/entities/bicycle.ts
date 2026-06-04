@@ -20,10 +20,11 @@ export class Bicycle implements Entity, HasCollision {
     const fromLeft = Math.random() < 0.5;
     const startX = fromLeft ? -50 : TAMX + 10;
     const startY = Math.random() * (TAMY * 0.5);
-    const speed = 2 + Math.random() * 1.5;
+    const xSpeed = 2 + Math.random() * 1.5;
+    const ySpeed = 2 + Math.random() * 1.5;
 
     this.position = { x: startX, y: startY };
-    this.velocity = { x: fromLeft ? speed : -speed, y: 0.8 };
+    this.velocity = { x: fromLeft ? xSpeed : -xSpeed, y: ySpeed };
     this.size = { width: 44, height: 70 };
     this.hitbox = { width: 56, height: 34 };
 
