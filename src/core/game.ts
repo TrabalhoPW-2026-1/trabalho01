@@ -1,4 +1,4 @@
-import { FPS } from "../config.js";
+import { FPS, getCurrentDifficulty, type Difficulty } from "../config.js";
 import { World } from "./world.js";
 import { Player } from "../entities/player.js";
 import { System } from "./system.js";
@@ -12,10 +12,13 @@ import { UISystem } from "../systems/ui.js";
 import { InvincibilitySystem } from "../systems/invincibility.js";
 import { DeliverySystem } from "../systems/delivery.js";
 
-const HIGH_SCORE_KEY = "pizzaHighScore";
 
-export function getHighScore(): number {
-  return parseInt(localStorage.getItem(HIGH_SCORE_KEY) ?? "0", 10);
+function getHighScoreKey(difficulty: Difficulty): string {
+  return `pizzaHighScore:${difficulty}`;
+}
+
+export function getHighScore(difficulty: Difficulty = getCurrentDifficulty()): number {
+  return parseInt(localStorage.getItem(getHighScoreKey(difficulty)) ?? "0", 10);
 }
 
 export class Game {
@@ -85,16 +88,31 @@ export class Game {
     }
 
     const score = this.world.score;
-    const prev = getHighScore();
+    const difficulty = getCurrentDifficulty();
+    const prev = getHighScore(difficulty);
     const isNew = score > prev;
-    if (isNew) localStorage.setItem(HIGH_SCORE_KEY, String(score));
+    if (isNew) localStorage.setItem(getHighScoreKey(difficulty), String(score));
 
     setTimeout(() => {
-      const msg = isNew
-        ? `Game Over! Novo recorde: ${score} pts!`
-        : `Game Over! Gorjetas: ${score} pts. Recorde: ${Math.max(score, prev)} pts.`;
-      alert(msg);
-      window.location.reload();
+      const gameoverEl = document.getElementById("gameover")!;
+      const messageEl = document.getElementById("gameover-message")!;
+      const scoreEl = document.getElementById("gameover-score")!;
+      const restartBtn = document.getElementById("gameover-restart")!;
+      const difficultyLabel =
+        difficulty === "easy" ? "Fácil" : difficulty === "medium" ? "Médio" : "Difícil";
+
+      messageEl.textContent = isNew ? "🎉 Novo Recorde! 🎉" : "Fim de Jogo";
+      scoreEl.innerHTML = `Nível: ${difficultyLabel}<br><br>💰 ${score} pts<br><br>Recorde: ${Math.max(score, prev)} pts`;
+      
+      gameoverEl.style.display = "flex";
+
+      restartBtn.addEventListener(
+        "click",
+        () => {
+          window.location.reload();
+        },
+        { once: true }
+      );
     }, 300);
   }
 
