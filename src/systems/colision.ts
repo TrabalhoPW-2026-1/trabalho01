@@ -22,7 +22,7 @@ export class ColisionSystem implements System {
 
       switch (other.type) {
         case "car":
-        case "bicycle":
+        case "ufo":
           this.handleObstacleHit(player, other, world);
           break;
         case "pizzabox":
@@ -70,7 +70,7 @@ export class ColisionSystem implements System {
     }
 
     if (entity.type === "car") audio.playCarCollision();
-    else if (entity.type === "bicycle") audio.playBikeCollision();
+    else if (entity.type === "ufo") audio.playBikeCollision();
 
     if (world.hasHelmet) {
       world.hasHelmet = false;

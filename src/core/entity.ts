@@ -1,7 +1,7 @@
 export type EntityType =
   | 'player'
   | 'car'
-  | 'bicycle'
+  | 'ufo'
   | 'pizzabox'
   | 'customer'
   | 'turbo'

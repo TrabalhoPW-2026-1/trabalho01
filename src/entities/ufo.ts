@@ -1,19 +1,19 @@
 import { HasCollision } from "../components/HasCollision.js";
 import { Entity, EntityType } from "../core/entity.js";
-import { TAMX, TAMY } from "../config.js";
+import { TAMX, TAMY, OBSTACLES_PNG_PATH } from "../config.js";
 import { road } from "../road.js";
 
-export class Bicycle implements Entity, HasCollision {
+export class Ufo implements Entity, HasCollision {
   element: HTMLImageElement;
   position: { x: number; y: number };
   velocity: { x: number; y: number };
   size: { width: number; height: number };
   hitbox: { width: number; height: number };
-  type: EntityType = "bicycle";
+  type: EntityType = "ufo";
 
   constructor() {
     this.element = document.createElement("img");
-    this.element.src = "assets/svg/bicycle.svg";
+    this.element.src = `${OBSTACLES_PNG_PATH}/ufo.png`;
     this.element.style.position = "absolute";
     this.element.draggable = false;
 
@@ -25,14 +25,13 @@ export class Bicycle implements Entity, HasCollision {
 
     this.position = { x: startX, y: startY };
     this.velocity = { x: fromLeft ? xSpeed : -xSpeed, y: ySpeed };
-    this.size = { width: 44, height: 70 };
-    this.hitbox = { width: 56, height: 34 };
+    this.size = { width: 80, height: 50 };
+    this.hitbox = { width: 80, height: 50 };
 
     this.element.style.width = `${this.size.width}px`;
     this.element.style.height = `${this.size.height}px`;
     this.element.style.left = `${this.position.x}px`;
     this.element.style.top = `${this.position.y}px`;
-    this.element.style.transform = fromLeft ? "rotate(90deg)" : "rotate(-90deg)";
 
     road.element.appendChild(this.element);
   }
