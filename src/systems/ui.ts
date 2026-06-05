@@ -8,5 +8,6 @@ export class UISystem implements System {
     hud.setLives(world.lives);
     hud.setTipTimer(world.tipTimer, world.hasPizza);
     hud.setTurbo(world.turboTimeRemaining > 0);
+    hud.setHelmet(world.hasHelmet);
   }
 }

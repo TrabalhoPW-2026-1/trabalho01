@@ -1,6 +1,6 @@
 import { HasCollision } from "../components/HasCollision.js";
 import { Entity, EntityType } from "../core/entity.js";
-import { TAMX } from "../config.js";
+import { TAMX, REST_PNG_PATH, ROAD_SPEED } from "../config.js";
 import { road } from "../road.js";
 
 export class Turbo implements Entity, HasCollision {
@@ -13,7 +13,7 @@ export class Turbo implements Entity, HasCollision {
 
   constructor() {
     this.element = document.createElement("img");
-    this.element.src = "assets/svg/turbo.svg";
+    this.element.src = `${REST_PNG_PATH}/turboPowerUp.png`;
     this.element.style.position = "absolute";
     this.element.draggable = false;
 
@@ -21,7 +21,7 @@ export class Turbo implements Entity, HasCollision {
     const x = margin + Math.random() * (TAMX * 0.8 - 38);
 
     this.position = { x, y: -50 };
-    this.velocity = { x: 0, y: 1 };
+    this.velocity = { x: 0, y: ROAD_SPEED };
     this.size = { width: 38, height: 38 };
     this.hitbox = { width: 30, height: 30 };
 
