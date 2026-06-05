@@ -9,7 +9,7 @@
 
 ## Descrição
 
-Este é um jogo é um *endless runner like* (ou corrida infinita), baseado no código inicial do Prof. Davi Fernandes. O jogo é uma corrida de entrega de pizza com vista de cima, onde você controla um entregador de moto. O objetivo é alcançar a maior quantidade de pontos possíveis até o a quantidade de vidas acabar.
+Este é um jogo *endless runner like* (ou corrida infinita), baseado no código inicial do Prof. Davi Fernandes. O jogo é uma corrida de entrega de pizza com vista de cima, onde você controla um entregador de moto. O objetivo é alcançar a maior quantidade de pontos possíveis até o a quantidade de vidas acabar.
 
 O objetivo é:
 - Pegar uma caixa de pizza
