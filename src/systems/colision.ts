@@ -5,6 +5,7 @@ import { HasCollision } from "../components/HasCollision.js";
 import { Player } from "../entities/player.js";
 import { Customer } from "../entities/customer.js";
 import { MAX_TIP_TIMER } from "../config.js";
+import { audio } from "../audio.js";
 
 export class ColisionSystem implements System {
   update(world: World): void {
@@ -29,6 +30,7 @@ export class ColisionSystem implements System {
             world.hasPizza = true;
             world.tipTimer = MAX_TIP_TIMER;
             world.destroyEntity(other);
+            audio.playPizzaPick();
           }
           break;
         case "customer":
@@ -39,10 +41,12 @@ export class ColisionSystem implements System {
         case "turbo":
           world.turboTimeRemaining = 300;
           world.destroyEntity(other);
+          audio.playBoosterPick();
           break;
         case "helmet":
           world.lives += 1;
           world.destroyEntity(other);
+          audio.playLifePick();
           break;
       }
     }
@@ -65,6 +69,9 @@ export class ColisionSystem implements System {
       world.tipTimer = 0;
     }
 
+    if (entity.type === "car") audio.playCarCollision();
+    else if (entity.type === "bicycle") audio.playBikeCollision();
+
     world.lives -= 1;
     player.setInvencibility();
     world.destroyEntity(entity);
@@ -78,5 +85,6 @@ export class ColisionSystem implements System {
     world.hasPizza = false;
     world.tipTimer = 0;
     world.destroyEntity(customer);
+    audio.playDelivered();
   }
 }

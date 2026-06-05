@@ -11,6 +11,8 @@ import { VisualAttachmentSystem } from "../systems/visualAttachment.js";
 import { UISystem } from "../systems/ui.js";
 import { InvincibilitySystem } from "../systems/invincibility.js";
 import { DeliverySystem } from "../systems/delivery.js";
+import { AudioSystem } from "../systems/audioSystem.js";
+import { audio } from "../audio.js";
 
 
 function getHighScoreKey(difficulty: Difficulty): string {
@@ -35,6 +37,7 @@ export class Game {
     new DeliverySystem(),
     new UISystem(),
     new InvincibilitySystem(),
+    new AudioSystem(),
   ];
 
   constructor() {
@@ -43,8 +46,6 @@ export class Game {
   }
 
   start() {
-    this.interval = setInterval(() => this.update(), 1000 / FPS);
-
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         this.paused ? this.resume() : this.pause();
@@ -56,6 +57,15 @@ export class Game {
     window.addEventListener("keyup", (e) => {
       this.world.keyboard[e.key] = false;
     });
+
+    // Unlock audio, play menu music for 2s then transition into game
+    audio.unlock().then(() => {
+      audio.playMenuMusic();
+      setTimeout(() => {
+        audio.fadeOutMusic(1.0);
+        this.interval = setInterval(() => this.update(), 1000 / FPS);
+      }, 2000);
+    });
   }
 
   pause(): void {
@@ -63,6 +73,8 @@ export class Game {
     clearInterval(this.interval);
     this.interval = undefined;
     this.paused = true;
+    audio.setCarTrafficLevel(0);
+    audio.playPauseMusic();
 
     const hs = getHighScore();
     document.getElementById("menu-highscore")!.textContent =
@@ -78,6 +90,7 @@ export class Game {
     document.getElementById("menu")!.style.display = "none";
     document.getElementById("menu-play")!.textContent = "Jogar";
     this.paused = false;
+    audio.stopMusic();
     this.interval = setInterval(() => this.update(), 1000 / FPS);
   }
 
@@ -86,6 +99,7 @@ export class Game {
       clearInterval(this.interval);
       this.interval = undefined;
     }
+    audio.playGameOver();
 
     const score = this.world.score;
     const difficulty = getCurrentDifficulty();
@@ -93,6 +107,7 @@ export class Game {
     const isNew = score > prev;
     if (isNew) localStorage.setItem(getHighScoreKey(difficulty), String(score));
 
+    // Show game over overlay after sting + start bg music
     setTimeout(() => {
       const gameoverEl = document.getElementById("gameover")!;
       const messageEl = document.getElementById("gameover-message")!;
@@ -103,16 +118,10 @@ export class Game {
 
       messageEl.textContent = isNew ? "🎉 Novo Recorde! 🎉" : "Fim de Jogo";
       scoreEl.innerHTML = `Nível: ${difficultyLabel}<br><br>💰 ${score} pts<br><br>Recorde: ${Math.max(score, prev)} pts`;
-      
+      audio.playGameOverBgMusic();
       gameoverEl.style.display = "flex";
 
-      restartBtn.addEventListener(
-        "click",
-        () => {
-          window.location.reload();
-        },
-        { once: true }
-      );
+      restartBtn.addEventListener("click", () => window.location.reload(), { once: true });
     }, 300);
   }
 
