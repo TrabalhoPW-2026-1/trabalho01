@@ -12,11 +12,18 @@ export class VisualAttachmentSystem implements System {
       if (entity instanceof Player) {
         const pizza = entity.visualAttachments.find(a => a.id === "pizza");
         if (pizza) pizza.isVisible = world.hasPizza;
+
+        const helmet = entity.visualAttachments.find(a => a.id === "helmet");
+        if (helmet) helmet.isVisible = world.hasHelmet;
       }
 
       const ve = entity as Entity & HasVisualAttachments;
       for (const att of ve.visualAttachments) {
-        att.element.style.left = `${entity.position.x + att.offset.x}px`;
+        const offsetX = entity instanceof Player && entity.direction === 0 && att.mirrorOnLeft
+          ? -att.offset.x
+          : att.offset.x;
+
+        att.element.style.left = `${entity.position.x + offsetX}px`;
         att.element.style.top = `${entity.position.y + att.offset.y}px`;
         att.element.style.display = att.isVisible ? "block" : "none";
       }

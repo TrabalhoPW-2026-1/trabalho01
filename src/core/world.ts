@@ -6,6 +6,7 @@ export class World {
   score: number = 0;
   lives: number = 3;
   hasPizza: boolean = false;
+  hasHelmet: boolean = true;
   tipTimer: number = 0;
   turboTimeRemaining: number = 0;
   keyboard: { [key: string]: boolean } = {};

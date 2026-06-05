@@ -44,7 +44,7 @@ export class ColisionSystem implements System {
           audio.playBoosterPick();
           break;
         case "helmet":
-          world.lives += 1;
+          world.hasHelmet = true;
           world.destroyEntity(other);
           audio.playLifePick();
           break;
@@ -72,8 +72,14 @@ export class ColisionSystem implements System {
     if (entity.type === "car") audio.playCarCollision();
     else if (entity.type === "bicycle") audio.playBikeCollision();
 
-    world.lives -= 1;
-    player.setInvencibility();
+    if (world.hasHelmet) {
+      world.hasHelmet = false;
+    }
+    else {
+      world.lives -= 1;
+      player.setInvencibility();
+    }
+
     world.destroyEntity(entity);
 
     if (world.lives <= 0) world.gameOver();
