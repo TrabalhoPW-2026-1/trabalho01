@@ -1,9 +1,12 @@
 import { HasCollision } from "../components/HasCollision.js";
+import { VisualAttachment, HasVisualAttachments } from "../components/HasVisualAttachments.js";
 import { Entity, EntityType } from "../core/entity.js";
-import { CUSTOMER_WAIT_TIME, ROAD_SPEED, TAMX, TAMY } from "../config.js";
+import { CUSTOMER_WAIT_TIME, ROAD_SPEED, TAMX, TAMY, PEOPLE_PNG_PATH } from "../config.js";
 import { road } from "../road.js";
 
-export class Customer implements Entity, HasCollision {
+const CUSTOMER_PNGS = ["person1", "person2", "person3"];
+
+export class Customer implements Entity, HasCollision, HasVisualAttachments {
   element: HTMLElement;
   position: { x: number; y: number };
   velocity: { x: number; y: number } = { x: 0, y: ROAD_SPEED };
@@ -13,6 +16,7 @@ export class Customer implements Entity, HasCollision {
 
   waitTimer: number = CUSTOMER_WAIT_TIME;
   private timerBar: HTMLElement;
+  visualAttachments: VisualAttachment[] = [];
 
   constructor() {
     const customerWidth = 40;
@@ -30,9 +34,10 @@ export class Customer implements Entity, HasCollision {
     this.element.style.gap = "3px";
 
     const img = document.createElement("img");
-    img.src = "assets/svg/customer.svg";
-    img.style.width = "36px";
-    img.style.height = "48px";
+    const png = CUSTOMER_PNGS[Math.floor(Math.random() * CUSTOMER_PNGS.length)];
+    img.src = `${PEOPLE_PNG_PATH}/${png}.png`;
+    img.style.width = "28px";
+    img.style.height = "64px";
     img.draggable = false;
 
     const barBg = document.createElement("div");
@@ -51,6 +56,22 @@ export class Customer implements Entity, HasCollision {
     barBg.appendChild(this.timerBar);
     this.element.appendChild(img);
     this.element.appendChild(barBg);
+
+    const pizzaEl = document.createElement("img");
+    pizzaEl.src = `${PEOPLE_PNG_PATH}/pizzaBubble.png`;
+    pizzaEl.style.position = "absolute";
+    pizzaEl.style.width = "24px";
+    pizzaEl.style.height = "24px";
+    pizzaEl.style.display = "none";
+    pizzaEl.style.pointerEvents = "none";
+    road.element.appendChild(pizzaEl);
+
+    this.visualAttachments.push({
+      id: "pizzaBubble",
+      element: pizzaEl,
+      offset: { x: 22, y: -20 },
+      isVisible: true,
+    });
 
     this.position = { x, y: -80 };
     this.size = { width: customerWidth, height: customerHeight };

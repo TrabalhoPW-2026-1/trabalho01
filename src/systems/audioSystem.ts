@@ -18,7 +18,7 @@ export class AudioSystem implements System {
     const py = player.position.y + player.size.height / 2;
 
     for (const e of world.entities) {
-      if (e.type !== "car" && e.type !== "bicycle") continue;
+      if (e.type !== "car" && e.type !== "ufo") continue;
 
       const ex = e.position.x + e.size.width / 2;
       const ey = e.position.y + e.size.height / 2;

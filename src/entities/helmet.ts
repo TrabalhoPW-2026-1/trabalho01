@@ -1,6 +1,6 @@
 import { HasCollision } from "../components/HasCollision.js";
 import { Entity, EntityType } from "../core/entity.js";
-import { TAMX } from "../config.js";
+import { TAMX, REST_PNG_PATH, ROAD_SPEED } from "../config.js";
 import { road } from "../road.js";
 
 export class Helmet implements Entity, HasCollision {
@@ -13,7 +13,7 @@ export class Helmet implements Entity, HasCollision {
 
   constructor() {
     this.element = document.createElement("img");
-    this.element.src = "assets/svg/helmet.svg";
+    this.element.src = `${REST_PNG_PATH}/helmetPowerUp.png`;
     this.element.style.position = "absolute";
     this.element.draggable = false;
 
@@ -21,7 +21,7 @@ export class Helmet implements Entity, HasCollision {
     const x = margin + Math.random() * (TAMX * 0.8 - 40);
 
     this.position = { x, y: -50 };
-    this.velocity = { x: 0, y: 1 };
+    this.velocity = { x: 0, y: ROAD_SPEED };
     this.size = { width: 40, height: 40 };
     this.hitbox = { width: 32, height: 32 };
 

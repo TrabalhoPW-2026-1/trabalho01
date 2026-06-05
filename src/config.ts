@@ -1,13 +1,17 @@
 export const FPS = 100;
 export const TAMX = Math.min(document.documentElement.clientWidth, 800);
 export const TAMY = document.documentElement.clientHeight;
+export const PLAYER_PNG_PATH = "assets/png/Motorcyle_and_Visual_Attachments"
+export const OBSTACLES_PNG_PATH = "assets/png/Obstacles"
+export const PEOPLE_PNG_PATH = "assets/png/People"
+export const REST_PNG_PATH = "assets/png/PoweUps_and_HUD"
 
 export type Difficulty = "easy" | "medium" | "hard";
 
 type DifficultySettings = {
 	roadSpeed: number;
 	probCar: number;
-	probBicycle: number;
+	probUfo: number;
 	probTurbo: number;
 	probHelmet: number;
 	maxTipTimer: number;
@@ -19,9 +23,9 @@ const DIFFICULTY_SETTINGS: Record<Difficulty, DifficultySettings> = {
 	easy: {
 		roadSpeed: 2,
 		probCar: 0.006,
-		probBicycle: 0.002,
+		probUfo: 0.002,
 		probTurbo: 0.00045,
-		probHelmet: 0.00018,
+		probHelmet: 0.00045,
 		maxTipTimer: 650,
 		customerWaitTime: 1000,
 		invincibilityTime: 340,
@@ -29,9 +33,9 @@ const DIFFICULTY_SETTINGS: Record<Difficulty, DifficultySettings> = {
 	medium: {
 		roadSpeed: 2.5,
 		probCar: 0.008,
-		probBicycle: 0.003,
+		probUfo: 0.003,
 		probTurbo: 0.0005,
-		probHelmet: 0.0002,
+		probHelmet: 0.0005,
 		maxTipTimer: 600,
 		customerWaitTime: 900,
 		invincibilityTime: 300,
@@ -39,9 +43,9 @@ const DIFFICULTY_SETTINGS: Record<Difficulty, DifficultySettings> = {
 	hard: {
 		roadSpeed: 3,
 		probCar: 0.011,
-		probBicycle: 0.0045,
+		probUfo: 0.0045,
 		probTurbo: 0.0007,
-		probHelmet: 0.0003,
+		probHelmet: 0.0007,
 		maxTipTimer: 540,
 		customerWaitTime: 780,
 		invincibilityTime: 260,
@@ -49,7 +53,7 @@ const DIFFICULTY_SETTINGS: Record<Difficulty, DifficultySettings> = {
 };
 
 export let PROB_CAR = DIFFICULTY_SETTINGS.easy.probCar;
-export let PROB_BICYCLE = DIFFICULTY_SETTINGS.easy.probBicycle;
+export let PROB_UFO = DIFFICULTY_SETTINGS.easy.probUfo;
 export let PROB_TURBO = DIFFICULTY_SETTINGS.easy.probTurbo;
 export let PROB_HELMET = DIFFICULTY_SETTINGS.easy.probHelmet;
 export let ROAD_SPEED = DIFFICULTY_SETTINGS.easy.roadSpeed;
@@ -68,7 +72,7 @@ export function setDifficulty(difficulty: Difficulty): DifficultySettings {
 	CURRENT_DIFFICULTY = difficulty;
 
 	PROB_CAR = settings.probCar;
-	PROB_BICYCLE = settings.probBicycle;
+	PROB_UFO = settings.probUfo;
 	PROB_TURBO = settings.probTurbo;
 	PROB_HELMET = settings.probHelmet;
 	ROAD_SPEED = settings.roadSpeed;

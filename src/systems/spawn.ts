@@ -1,8 +1,8 @@
-import { PROB_CAR, PROB_BICYCLE, PROB_TURBO, PROB_HELMET } from "../config.js";
+import { PROB_CAR, PROB_UFO, PROB_TURBO, PROB_HELMET } from "../config.js";
 import { System } from "../core/system.js";
 import { World } from "../core/world.js";
 import { Car, CAR_NUM_LANES } from "../entities/car.js";
-import { Bicycle } from "../entities/bicycle.js";
+import { Ufo } from "../entities/ufo.js";
 import { PizzaBox } from "../entities/pizzabox.js";
 import { Customer } from "../entities/customer.js";
 import { Turbo } from "../entities/turbo.js";
@@ -19,7 +19,7 @@ export class SpawnSystem implements System {
         world.entities.push(new Car(lane));
       }
     }
-    if (Math.random() < PROB_BICYCLE) world.entities.push(new Bicycle());
+    if (Math.random() < PROB_UFO) world.entities.push(new Ufo());
     if (Math.random() < PROB_TURBO && world.turboTimeRemaining <= 0) {
       world.entities.push(new Turbo());
     }
