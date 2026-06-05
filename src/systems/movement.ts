@@ -26,6 +26,7 @@ export class MovementSystem implements System {
       if ("element" in entity) {
         entity.element.style.left = `${entity.position.x}px`;
         entity.element.style.top = `${entity.position.y}px`;
+
       }
     }
 

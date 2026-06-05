@@ -5,6 +5,8 @@ import { road } from "../road.js";
 
 const CAR_SVGS = ["car-red", "car-blue", "car-yellow", "car-white"];
 
+export const CAR_NUM_LANES = 4;
+
 export class Car implements Entity, HasCollision {
   element: HTMLImageElement;
   position: { x: number; y: number };
@@ -12,8 +14,10 @@ export class Car implements Entity, HasCollision {
   size: { width: number; height: number };
   hitbox: { width: number; height: number };
   type: EntityType = "car";
+  lane: number;
 
-  constructor() {
+  constructor(lane: number) {
+    this.lane = lane;
     const svg = CAR_SVGS[Math.floor(Math.random() * CAR_SVGS.length)];
 
     this.element = document.createElement("img");
@@ -22,7 +26,8 @@ export class Car implements Entity, HasCollision {
     this.element.draggable = false;
 
     const margin = TAMX * 0.1;
-    const x = margin + Math.random() * (TAMX * 0.8 - 54);
+    const usable = TAMX * 0.8 - 54;
+    const x = margin + (lane / (CAR_NUM_LANES - 1)) * usable;
     const speed = 1.5 + Math.random() * 2;
 
     this.position = { x, y: -80 };

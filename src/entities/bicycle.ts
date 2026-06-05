@@ -25,13 +25,13 @@ export class Bicycle implements Entity, HasCollision {
     this.position = { x: startX, y: startY };
     this.velocity = { x: fromLeft ? speed : -speed, y: 0.8 };
     this.size = { width: 44, height: 70 };
-    this.hitbox = { width: 34, height: 56 };
+    this.hitbox = { width: 56, height: 34 };
 
     this.element.style.width = `${this.size.width}px`;
     this.element.style.height = `${this.size.height}px`;
     this.element.style.left = `${this.position.x}px`;
     this.element.style.top = `${this.position.y}px`;
-    if (!fromLeft) this.element.style.transform = "scaleX(-1)";
+    this.element.style.transform = fromLeft ? "rotate(90deg)" : "rotate(-90deg)";
 
     road.element.appendChild(this.element);
   }
