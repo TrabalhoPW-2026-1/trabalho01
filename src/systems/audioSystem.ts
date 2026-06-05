@@ -9,7 +9,6 @@ const BIKE_WARN_Y = 70;
 
 export class AudioSystem implements System {
   private warned = new Set<object>();
-  private carTrafficStarted = false;
 
   update(world: World): void {
     const player = world.entities.find(e => e.type === "player");
@@ -17,14 +16,6 @@ export class AudioSystem implements System {
 
     const px = player.position.x + player.size.width / 2;
     const py = player.position.y + player.size.height / 2;
-
-    // Car traffic engine sound
-    if (!this.carTrafficStarted) {
-      audio.startCarTraffic();
-      this.carTrafficStarted = true;
-    }
-    const numCars = world.entities.filter(e => e.type === "car").length;
-    audio.setCarTrafficLevel(numCars);
 
     for (const e of world.entities) {
       if (e.type !== "car" && e.type !== "bicycle") continue;

@@ -1,5 +1,17 @@
 import { Game, getHighScore } from "./core/game.js";
 import { setDifficulty, type Difficulty } from "./config.js";
+import { audio } from "./audio.js";
+
+function initSoundSliders(): void {
+  const musicSlider = document.getElementById("music-vol") as HTMLInputElement;
+  const sfxSlider   = document.getElementById("sfx-vol")   as HTMLInputElement;
+
+  musicSlider.value = String(Math.round(audio.getMusicVolume() * 100));
+  sfxSlider.value   = String(Math.round(audio.getSfxVolume()   * 100));
+
+  musicSlider.addEventListener("input", () => audio.setMusicVolume(+musicSlider.value / 100));
+  sfxSlider.addEventListener(  "input", () => audio.setSfxVolume(  +sfxSlider.value   / 100));
+}
 
 function showMenu(): void {
   const menu = document.getElementById("menu")!;
@@ -42,4 +54,5 @@ function showMenu(): void {
   );
 }
 
+initSoundSliders();
 showMenu();

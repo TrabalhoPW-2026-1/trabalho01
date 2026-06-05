@@ -40,17 +40,59 @@ function zzfxGen(
   return buf;
 }
 
+const STORAGE_KEY = 'pizzaSoundSettings';
+
+function loadSoundSettings(): { music: number; sfx: number } {
+  try { return { music: 0.8, sfx: 1.0, ...JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') }; }
+  catch { return { music: 0.8, sfx: 1.0 }; }
+}
+
+function saveSoundSettings(music: number, sfx: number): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ music, sfx }));
+}
+
+function linearToDb(v: number): number {
+  return v <= 0 ? -Infinity : 20 * Math.log10(v);
+}
+
 class AudioManager {
   private musicSeq:    Tone.Sequence | null = null;
   private musicSynth:  Tone.PolySynth | null = null;
   private musicMaster: Tone.Volume | null = null;
+  private musicGain:   Tone.Volume | null = null;  // persistent master music gain
+  private sfxGain:     GainNode | null = null;     // persistent master SFX gain
 
-  private carOsc:  Tone.Oscillator | null = null;
-  private carFilt: Tone.Filter | null = null;
-  private carVol:  Tone.Volume | null = null;
+  private _musicVol: number;
+  private _sfxVol: number;
+
+  constructor() {
+    const s = loadSoundSettings();
+    this._musicVol = s.music;
+    this._sfxVol   = s.sfx;
+  }
 
   async unlock(): Promise<void> {
     await Tone.start();
+    const ctx = Tone.getContext().rawContext as AudioContext;
+    this.musicGain = new Tone.Volume(linearToDb(this._musicVol)).toDestination();
+    this.sfxGain   = ctx.createGain();
+    this.sfxGain.gain.value = this._sfxVol;
+    this.sfxGain.connect(ctx.destination);
+  }
+
+  getMusicVolume(): number { return this._musicVol; }
+  getSfxVolume():   number { return this._sfxVol; }
+
+  setMusicVolume(v: number): void {
+    this._musicVol = v;
+    saveSoundSettings(v, this._sfxVol);
+    this.musicGain?.volume.rampTo(linearToDb(v), 0.05);
+  }
+
+  setSfxVolume(v: number): void {
+    this._sfxVol = v;
+    saveSoundSettings(this._musicVol, v);
+    if (this.sfxGain) this.sfxGain.gain.value = v;
   }
 
   stopMusic(): void {
@@ -81,7 +123,7 @@ class AudioManager {
   ): void {
     this.stopMusic();
 
-    const master = new Tone.Volume(vol).toDestination();
+    const master = new Tone.Volume(vol).connect(this.musicGain ?? Tone.getDestination());
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const synth = new Tone.PolySynth(Tone.Synth, {
       oscillator: { type: wave },
@@ -131,19 +173,16 @@ class AudioManager {
     );
   }
 
-  playGameOver(): void {
-    this.stopMusic();
-    const vol = new Tone.Volume(-14).toDestination();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const synth = new Tone.Synth({
-      oscillator: { type: 'square' },
-      envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.4 },
-    } as any).connect(vol);
-    const now = Tone.now();
-    (['G4', 'F4', 'Eb4', 'D4', 'C4'] as string[]).forEach((note, i) => {
-      synth.triggerAttackRelease(note, '4n', now + i * 0.45);
-    });
-    setTimeout(() => { synth.dispose(); vol.dispose(); }, 4000);
+  playGameplayMusic(): void {
+    this.startLoop(
+      [
+        'G4', 'B4', 'D5',  'G5',  'F#5', 'D5',  'B4',  'G4',
+        'A4', 'C5', 'E5',  'A5',  'G5',  'E5',  'C5',  'A4',
+        'B4', 'D5', 'G5',  'B5',  'A5',  'G5',  'D5',  'B4',
+        'C5', 'E5', 'G5',  'C6',  'B5',  'G5',  'E5',  'C5',
+      ],
+      170, 'square', -13
+    );
   }
 
   playGameOverBgMusic(): void {
@@ -152,34 +191,6 @@ class AudioManager {
        'A3', 'E4', 'C4', null, 'G3', 'D4', 'B3', null],
       45, 'triangle', -16
     );
-  }
-
-  // --- car traffic engine ---
-  startCarTraffic(): void {
-    if (this.carOsc) return;
-    const vol  = new Tone.Volume(-60).toDestination();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const filt = new Tone.Filter({ frequency: 350, type: 'lowpass' } as any).connect(vol);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const osc  = new Tone.Oscillator({ frequency: 125, type: 'sawtooth' } as any).connect(filt);
-    osc.start();
-    this.carOsc  = osc  as unknown as Tone.Oscillator;
-    this.carFilt = filt as unknown as Tone.Filter;
-    this.carVol  = vol;
-  }
-
-  setCarTrafficLevel(numCars: number): void {
-    if (!this.carVol) return;
-    const targetVol = numCars === 0 ? -60 : Math.min(-8, -22 + numCars * 4);
-    this.carVol.volume.rampTo(targetVol, 0.8);
-  }
-
-  stopCarTraffic(): void {
-    if (!this.carOsc || !this.carVol) return;
-    const [osc, filt, vol] = [this.carOsc, this.carFilt, this.carVol];
-    this.carOsc = null; this.carFilt = null; this.carVol = null;
-    vol.volume.rampTo(-60, 0.5);
-    setTimeout(() => { osc.stop(); osc.dispose(); filt?.dispose(); vol.dispose(); }, 700);
   }
 
   // --- ZzFX sound playback ---
@@ -197,7 +208,7 @@ class AudioManager {
     abuf.copyToChannel(mixed, 0);
     const src = ctx.createBufferSource();
     src.buffer = abuf;
-    src.connect(ctx.destination);
+    src.connect(this.sfxGain ?? ctx.destination);
     src.start();
   }
 

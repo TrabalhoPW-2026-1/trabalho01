@@ -191,6 +191,27 @@ body {
   background: #ff5500;
 }
 
+#sound-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.sound-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sound-row input[type="range"] {
+  width: 140px;
+  accent-color: #cc4400;
+  cursor: pointer;
+}
+
 #gameover {
   position: fixed;
   inset: 0;

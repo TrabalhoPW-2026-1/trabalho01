@@ -63,6 +63,7 @@ export class Game {
       audio.playMenuMusic();
       setTimeout(() => {
         audio.fadeOutMusic(1.0);
+        setTimeout(() => audio.playGameplayMusic(), 1100);
         this.interval = setInterval(() => this.update(), 1000 / FPS);
       }, 2000);
     });
@@ -73,7 +74,6 @@ export class Game {
     clearInterval(this.interval);
     this.interval = undefined;
     this.paused = true;
-    audio.setCarTrafficLevel(0);
     audio.playPauseMusic();
 
     const hs = getHighScore();
@@ -90,7 +90,7 @@ export class Game {
     document.getElementById("menu")!.style.display = "none";
     document.getElementById("menu-play")!.textContent = "Jogar";
     this.paused = false;
-    audio.stopMusic();
+    audio.playGameplayMusic();
     this.interval = setInterval(() => this.update(), 1000 / FPS);
   }
 
@@ -99,30 +99,25 @@ export class Game {
       clearInterval(this.interval);
       this.interval = undefined;
     }
-    audio.playGameOver();
-
     const score = this.world.score;
     const difficulty = getCurrentDifficulty();
     const prev = getHighScore(difficulty);
     const isNew = score > prev;
     if (isNew) localStorage.setItem(getHighScoreKey(difficulty), String(score));
 
-    // Show game over overlay after sting + start bg music
-    setTimeout(() => {
-      const gameoverEl = document.getElementById("gameover")!;
-      const messageEl = document.getElementById("gameover-message")!;
-      const scoreEl = document.getElementById("gameover-score")!;
-      const restartBtn = document.getElementById("gameover-restart")!;
-      const difficultyLabel =
-        difficulty === "easy" ? "Fácil" : difficulty === "medium" ? "Médio" : "Difícil";
+    const gameoverEl = document.getElementById("gameover")!;
+    const messageEl = document.getElementById("gameover-message")!;
+    const scoreEl = document.getElementById("gameover-score")!;
+    const restartBtn = document.getElementById("gameover-restart")!;
+    const difficultyLabel =
+      difficulty === "easy" ? "Fácil" : difficulty === "medium" ? "Médio" : "Difícil";
 
-      messageEl.textContent = isNew ? "🎉 Novo Recorde! 🎉" : "Fim de Jogo";
-      scoreEl.innerHTML = `Nível: ${difficultyLabel}<br><br>💰 ${score} pts<br><br>Recorde: ${Math.max(score, prev)} pts`;
-      audio.playGameOverBgMusic();
-      gameoverEl.style.display = "flex";
+    messageEl.textContent = isNew ? "🎉 Novo Recorde! 🎉" : "Fim de Jogo";
+    scoreEl.innerHTML = `Nível: ${difficultyLabel}<br><br>💰 ${score} pts<br><br>Recorde: ${Math.max(score, prev)} pts`;
+    audio.playGameOverBgMusic();
+    gameoverEl.style.display = "flex";
 
-      restartBtn.addEventListener("click", () => window.location.reload(), { once: true });
-    }, 300);
+    restartBtn.addEventListener("click", () => window.location.reload(), { once: true });
   }
 
   update() {
