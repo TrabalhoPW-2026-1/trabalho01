@@ -131,7 +131,7 @@ class AudioManager {
     } as any).connect(master);
 
     const seq = new Tone.Sequence<string | string[] | null>(
-      (time, note) => {
+      (time: number, note: string | string[] | null) => {
         if (note !== null) synth.triggerAttackRelease(note, '8n', time);
       },
       notes,
