@@ -13,7 +13,28 @@
   <div id="menu">
     <h1>🍕 Pizza Delivery</h1>
     <p id="menu-highscore"></p>
-    <button id="menu-play">Jogar</button>
+    <form id="menu-form">
+      <fieldset class="difficulty-group">
+        <legend>Dificuldade</legend>
+
+        <label class="difficulty-option">
+          <input type="radio" name="difficulty" value="easy" checked />
+          <span>Fácil</span>
+        </label>
+
+        <label class="difficulty-option">
+          <input type="radio" name="difficulty" value="medium" />
+          <span>Médio</span>
+        </label>
+
+        <label class="difficulty-option">
+          <input type="radio" name="difficulty" value="hard" />
+          <span>Difícil</span>
+        </label>
+      </fieldset>
+
+      <button id="menu-play" type="button">Jogar</button>
+    </form>
   </div>
   <div id="road"></div>
   <script type="module" src="dist/main.js"></script>
