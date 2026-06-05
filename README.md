@@ -2,10 +2,10 @@
 
 ## Membros
 
-- André Okimoto
-- Eduardo Cordeiro
-- Nicolas Mady
-- Samuel Davi
+- André Okimoto (andre.okimoto@icomp.ufam.edu.br)
+- Eduardo Cordeiro (eduardo.camara@icomp.ufam.edu.br)
+- Nicolas Mady (nicolas.gomes@icomp.ufam.edu.br)
+- Samuel Davi (samuel.chagas@icomp.ufam.edu.br)
 
 ## Descrição
 
