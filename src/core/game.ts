@@ -1,20 +1,32 @@
-import { FPS } from "../config.js"
-import { World } from "./world.js"
-import { Player } from "../entities/player.js"
-import { System } from "./system.js"
-import { InputSystem } from "../systems/input.js"
-import { SpawnSystem } from "../systems/spawn.js"
-import { MovementSystem } from "../systems/movement.js"
-import { space } from "../space.js"
-import { ColisionSystem } from "../systems/colision.js"
-import { VisualAttachmentSystem } from "../systems/visualAttachment.js"
+import { FPS, getCurrentDifficulty, type Difficulty } from "../config.js";
+import { World } from "./world.js";
+import { Player } from "../entities/player.js";
+import { System } from "./system.js";
+import { InputSystem } from "../systems/input.js";
+import { SpawnSystem } from "../systems/spawn.js";
+import { MovementSystem } from "../systems/movement.js";
+import { road } from "../road.js";
+import { ColisionSystem } from "../systems/colision.js";
+import { VisualAttachmentSystem } from "../systems/visualAttachment.js";
 import { UISystem } from "../systems/ui.js";
-import { InvincibilitySystem } from "../systems/invincibility.js"
+import { InvincibilitySystem } from "../systems/invincibility.js";
+import { DeliverySystem } from "../systems/delivery.js";
+import { AudioSystem } from "../systems/audioSystem.js";
+import { audio } from "../audio.js";
 
+
+function getHighScoreKey(difficulty: Difficulty): string {
+  return `pizzaHighScore:${difficulty}`;
+}
+
+export function getHighScore(difficulty: Difficulty = getCurrentDifficulty()): number {
+  return parseInt(localStorage.getItem(getHighScoreKey(difficulty)) ?? "0", 10);
+}
 
 export class Game {
   private world: World = new World();
-  private intervalo: number | undefined;
+  private interval: number | undefined;
+  private paused = false;
 
   private systems: System[] = [
     new InputSystem(),
@@ -22,51 +34,94 @@ export class Game {
     new MovementSystem(),
     new VisualAttachmentSystem(),
     new ColisionSystem(),
+    new DeliverySystem(),
     new UISystem(),
-    new InvincibilitySystem()
+    new InvincibilitySystem(),
+    new AudioSystem(),
   ];
 
   constructor() {
-    // Inicializa o estado do jogo, criando o jogador e adicionando à lista de entidades
-    const player = new Player();
-    this.world.entities.push(player);
-
+    this.world.entities.push(new Player());
     this.world.onGameOver = () => this.stop();
   }
 
-  /**
-   * Inicia o ciclo de vida do jogo
-   */
   start() {
-    this.intervalo = setInterval(() => { this.update(); }, 500 / FPS);
-
     window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        this.paused ? this.resume() : this.pause();
+        return;
+      }
       this.world.keyboard[e.key] = true;
     });
 
     window.addEventListener("keyup", (e) => {
       this.world.keyboard[e.key] = false;
     });
+
+    // Unlock audio, play menu music for 2s then transition into game
+    audio.unlock().then(() => {
+      audio.playMenuMusic();
+      setTimeout(() => {
+        audio.fadeOutMusic(1.0);
+        setTimeout(() => audio.playGameplayMusic(), 1100);
+        this.interval = setInterval(() => this.update(), 1000 / FPS);
+      }, 2000);
+    });
+  }
+
+  pause(): void {
+    if (!this.interval) return;
+    clearInterval(this.interval);
+    this.interval = undefined;
+    this.paused = true;
+    audio.playPauseMusic();
+
+    const hs = getHighScore();
+    document.getElementById("menu-highscore")!.textContent =
+      hs > 0 ? `Recorde: ${hs} pts` : "";
+    document.getElementById("menu-play")!.textContent = "Continuar";
+    document.getElementById("menu")!.style.display = "flex";
+    document.getElementById("menu-play")!
+      .addEventListener("click", () => this.resume(), { once: true });
+  }
+
+  resume(): void {
+    if (!this.paused) return;
+    document.getElementById("menu")!.style.display = "none";
+    document.getElementById("menu-play")!.textContent = "Jogar";
+    this.paused = false;
+    audio.playGameplayMusic();
+    this.interval = setInterval(() => this.update(), 1000 / FPS);
   }
 
   stop(): void {
-    if (this.intervalo) {
-      clearInterval(this.intervalo);
-      this.intervalo = undefined;
-      setTimeout(() => {
-        alert("Game Over! Sua pontuação final foi: " + this.world.score);
-        window.location.reload();
-      }, 300)
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = undefined;
     }
+    const score = this.world.score;
+    const difficulty = getCurrentDifficulty();
+    const prev = getHighScore(difficulty);
+    const isNew = score > prev;
+    if (isNew) localStorage.setItem(getHighScoreKey(difficulty), String(score));
+
+    const gameoverEl = document.getElementById("gameover")!;
+    const messageEl = document.getElementById("gameover-message")!;
+    const scoreEl = document.getElementById("gameover-score")!;
+    const restartBtn = document.getElementById("gameover-restart")!;
+    const difficultyLabel =
+      difficulty === "easy" ? "Fácil" : difficulty === "medium" ? "Médio" : "Difícil";
+
+    messageEl.textContent = isNew ? "🎉 Novo Recorde! 🎉" : "Fim de Jogo";
+    scoreEl.innerHTML = `Nível: ${difficultyLabel}<br><br>💰 ${score} pts<br><br>Recorde: ${Math.max(score, prev)} pts`;
+    audio.playGameOverBgMusic();
+    gameoverEl.style.display = "flex";
+
+    restartBtn.addEventListener("click", () => window.location.reload(), { once: true });
   }
 
-  /**
-   * Executa um ciclo de atualização do jogo, chamando o método update de cada sistema
-   */
   update() {
-    for (const system of this.systems) {
-      system.update(this.world);
-    }
-    space.move();
+    for (const system of this.systems) system.update(this.world);
+    road.move();
   }
 }

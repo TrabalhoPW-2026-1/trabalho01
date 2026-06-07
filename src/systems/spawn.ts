@@ -1,40 +1,39 @@
-import { PROB_OBSTACLE, PROB_COIN, PROB_POWERUP } from "../config.js";
+import { PROB_CAR, PROB_UFO, PROB_TURBO, PROB_HELMET } from "../config.js";
 import { System } from "../core/system.js";
 import { World } from "../core/world.js";
-import { Obstacle } from "../entities/obstacle.js";
-import { Coin } from "../entities/coin.js";
-import { PowerUp } from "../entities/powerup.js";
+import { Car, CAR_NUM_LANES } from "../entities/car.js";
+import { Ufo } from "../entities/ufo.js";
+import { PizzaBox } from "../entities/pizzabox.js";
+import { Customer } from "../entities/customer.js";
+import { Turbo } from "../entities/turbo.js";
+import { Helmet } from "../entities/helmet.js";
 
 export class SpawnSystem implements System {
+  update(world: World): void {
+    if (Math.random() < PROB_CAR) {
+      const cars = world.entities.filter(e => e.type === "car") as Car[];
+      const occupied = new Set(cars.filter(c => c.position.y < 120).map(c => c.lane));
+      const free = Array.from({ length: CAR_NUM_LANES }, (_, i) => i).filter(l => !occupied.has(l));
+      if (free.length > 0) {
+        const lane = free[Math.floor(Math.random() * free.length)];
+        world.entities.push(new Car(lane));
+      }
+    }
+    if (Math.random() < PROB_UFO) world.entities.push(new Ufo());
+    if (Math.random() < PROB_TURBO && world.turboTimeRemaining <= 0) {
+      world.entities.push(new Turbo());
+    }
+    if (Math.random() < PROB_HELMET) world.entities.push(new Helmet());
 
-    update(world: World): void {
-        if (Math.random() < PROB_OBSTACLE) world.entities.push(new Obstacle());
-        if (Math.random() < PROB_COIN) this.spawnCoins(world);
-        if (Math.random() < PROB_POWERUP) this.spawnPowerUp(world);
+    const hasCustomer = world.entities.some(e => e.type === "customer");
+    const hasPizzaBox = world.entities.some(e => e.type === "pizzabox");
+
+    if (world.hasPizza && !hasCustomer) {
+      world.entities.push(new Customer());
     }
 
-    private spawnCoins(world: World): void {
-        const numCoins = Math.floor(Math.random() * 3) + 2; // Spawn 2 to 4 coins
-        const x = Math.random() * (document.documentElement.clientWidth - 30); // Random x position, accounting for coin width
-        const coinHeight = 30;
-        const spacing = 20;
-        
-        let y = -coinHeight; // Start above the screen
-        for (let i = 0; i < numCoins; i++) {
-            world.entities.push(new Coin(x, y));
-            console.log(`Spawned coin at (${x}, ${y})`);
-            y -= (coinHeight + spacing);
-        }
+    if (!world.hasPizza && !hasPizzaBox) {
+      world.entities.push(new PizzaBox());
     }
-
-    private spawnPowerUp(world: World): void {
-        // Só spawna caso o player não esteja com o powerup ativo
-        if (!world.powerupActivate) {
-            const x = Math.random() * (document.documentElement.clientWidth - 40);
-            const powerupHeight = 40;
-            
-            let y = -powerupHeight;
-            world.entities.push(new PowerUp(x, y));
-        }
-    }
+  }
 }

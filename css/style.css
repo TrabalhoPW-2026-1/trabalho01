@@ -5,72 +5,232 @@
 
 body {
   height: 100vh;
-
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: black;
+  background-color: #111;
 }
 
-#space {
-  background-image: url("../../assets/png/Background/starBackground.png");
+#road {
   position: relative;
   overflow: hidden;
-  display: flex;
-  align-items: center;
+  
+  background-image: url('../assets/png/Road/road.png'); 
+  
+  background-size: 100% auto; 
+  
+  background-repeat: repeat-y; 
 }
 
-#ship {
-  position: absolute;
-}
-
-.enemy-ship {
-  position: absolute;
-}
-
-.obstacle {
-  position: absolute;
-}
-
-.coin {
-  position: absolute;
-}
-
-.powerup {
+#moto {
   position: absolute;
 }
 
 #hud {
   position: absolute;
-
   top: 20px;
   left: 20px;
-
   display: flex;
   flex-direction: column;
   gap: 12px;
-
   z-index: 9999;
-
   color: white;
-
-  font-family: sans-serif;
-  font-size: 24px;
-}
-
-#hud img {
-  width: 24px;
-  height: 24px;
-  vertical-align: middle;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
 }
 
 .lives-container {
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 6px;
+  align-items: center;
 }
 
-.heart {
-  width: 32px;
-  height: 32px;
+.tip-timer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tip-bar-bg {
+  width: 130px;
+  height: 8px;
+  background: #444;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tip-bar {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.turbo-indicator {
+  color: #ffff00;
+  animation: blink 0.4s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+#menu {
+  position: fixed;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  background: rgba(0, 0, 0, 0.88);
+  color: white;
+  font-family: 'Press Start 2P', monospace;
+  z-index: 99999;
+}
+
+#menu h1 {
+  font-size: 36px;
+  letter-spacing: 2px;
+}
+
+#menu-highscore {
+  font-size: 14px;
+  color: #ffd700;
+  min-height: 20px;
+}
+
+#menu-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.difficulty-group {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.difficulty-group legend {
+   font-size: 12px;
+   margin-bottom: 4px;
+   color: #f5f5f5;
+   text-align: center;
+   width: 100%;
+ }.difficulty-option {
+  cursor: pointer;
+}
+
+.difficulty-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.difficulty-option span {
+   display: inline-flex;
+   min-width: 180px;
+   justify-content: center;
+   padding: 12px 18px;
+   border-radius: 10px;
+   border: 2px solid #444;
+   background: #1d1d1d;
+   color: #e9e9e9;
+   transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+   width: 180px;
+   box-sizing: border-box;
+ }.difficulty-option input:checked + span {
+  background: #cc4400;
+  border-color: #ff8a33;
+  color: #fff;
+  transform: scale(1.03);
+}
+
+#menu-play {
+  padding: 14px 40px;
+  font-size: 14px;
+  font-family: 'Press Start 2P', monospace;
+  background: #cc4400;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#menu-play:hover {
+  background: #ff5500;
+}
+
+#sound-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.sound-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sound-row input[type="range"] {
+  width: 140px;
+  accent-color: #cc4400;
+  cursor: pointer;
+}
+
+#gameover {
+  position: fixed;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  background: rgba(0, 0, 0, 0.92);
+  color: white;
+  font-family: 'Press Start 2P', monospace;
+  z-index: 99999;
+}
+
+#gameover h1 {
+  font-size: 48px;
+  color: #ff3333;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px #ff3333;
+}
+
+#gameover-message {
+  font-size: 14px;
+  color: #ffd700;
+  text-align: center;
+  min-height: 20px;
+}
+
+#gameover-score {
+  font-size: 16px;
+  color: #e9e9e9;
+  text-align: center;
+}
+
+#gameover-restart {
+  padding: 14px 40px;
+  font-size: 14px;
+  font-family: 'Press Start 2P', monospace;
+  background: #cc4400;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+#gameover-restart:hover {
+  background: #ff5500;
 }

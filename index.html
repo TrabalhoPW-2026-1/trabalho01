@@ -1,16 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+  <title>Pizza Delivery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+    { "imports": { "tone": "https://esm.sh/tone@14" } }
+  </script>
 </head>
-
 <body>
-  <div id="space"></div>
+  <div id="menu">
+    <h1 id="menu-title">🍕 Pizza Delivery</h1>
+    <p id="menu-highscore"></p>
+    <form id="menu-form">
+      <fieldset class="difficulty-group">
+        <legend>Dificuldade</legend>
+
+        <label class="difficulty-option">
+          <input type="radio" name="difficulty" value="easy" checked />
+          <span>Fácil</span>
+        </label>
+
+        <label class="difficulty-option">
+          <input type="radio" name="difficulty" value="medium" />
+          <span>Médio</span>
+        </label>
+
+        <label class="difficulty-option">
+          <input type="radio" name="difficulty" value="hard" />
+          <span>Difícil</span>
+        </label>
+      </fieldset>
+
+      <button id="menu-play" type="button">Jogar</button>
+    </form>
+    <div id="sound-settings">
+      <label class="sound-row">
+        <span>🎵</span>
+        <input type="range" id="music-vol" min="0" max="100" step="1" value="80" />
+      </label>
+      <label class="sound-row">
+        <span>🔊</span>
+        <input type="range" id="sfx-vol" min="0" max="100" step="1" value="100" />
+      </label>
+    </div>
+  </div>
+    <div id="gameover">
+    <h1>GAME OVER</h1>
+    <p id="gameover-message"></p>
+    <p id="gameover-score"></p>
+    <button id="gameover-restart">Jogar Novamente</button>
+  </div>
+  <div id="road"></div>
   <script type="module" src="dist/main.js"></script>
 </body>
-
 </html>

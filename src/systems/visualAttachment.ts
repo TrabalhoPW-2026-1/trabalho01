@@ -5,39 +5,28 @@ import { System } from "../core/system.js";
 import { World } from "../core/world.js";
 
 export class VisualAttachmentSystem implements System {
+  update(world: World): void {
+    for (const entity of world.entities) {
+      if (!("position" in entity) || !("visualAttachments" in entity)) continue;
 
-    update(world: World): void {
-		for (const entity of world.entities) {
-			if (
-				!("position" in entity) ||
-				!("visualAttachments" in entity)
-			) continue;
+      if (entity instanceof Player) {
+        const pizza = entity.visualAttachments.find(a => a.id === "pizza");
+        if (pizza) pizza.isVisible = world.hasPizza;
 
-			if (entity instanceof Player) {
+        const helmet = entity.visualAttachments.find(a => a.id === "helmet");
+        if (helmet) helmet.isVisible = world.hasHelmet;
+      }
 
-				const shield = entity.visualAttachments.find(
-					attachment => attachment.id === "shield"
-				);
+      const ve = entity as Entity & HasVisualAttachments;
+      for (const att of ve.visualAttachments) {
+        const offsetX = entity instanceof Player && entity.direction === 0 && att.mirrorOnLeft
+          ? -att.offset.x
+          : att.offset.x;
 
-				if (shield) {
-					shield.isVisible = world.powerupActivate;
-				}
-			}
-
-			const visualEntity =
-				entity as Entity & HasVisualAttachments;
-
-			for (const attachment of visualEntity.visualAttachments) {
-				attachment.element.style.left =
-					`${entity.position.x + attachment.offset.x}px`;
-				attachment.element.style.top =
-					`${entity.position.y + attachment.offset.y}px`;
-
-				attachment.element.style.display =
-					attachment.isVisible
-						? "block"
-						: "none";
-			}
-		}
-	}
+        att.element.style.left = `${entity.position.x + offsetX}px`;
+        att.element.style.top = `${entity.position.y + att.offset.y}px`;
+        att.element.style.display = att.isVisible ? "block" : "none";
+      }
+    }
+  }
 }

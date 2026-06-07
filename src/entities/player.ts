@@ -1,83 +1,69 @@
 import { HasCollision } from "../components/HasCollision.js";
 import { HasInvincibility } from "../components/HasInvincibility.js";
 import { VisualAttachment, HasVisualAttachments } from "../components/HasVisualAttachments.js";
-import { INVINCIBILITY_TIME, TAMX } from "../config.js";
+import { INVINCIBILITY_TIME, TAMX, TAMY } from "../config.js";
 import { Entity, EntityType } from "../core/entity.js";
-import { space } from "../space.js";
-
-const directions = [
-  "assets/png/playerLeft.png",
-  "assets/png/player.png",
-  "assets/png/playerRight.png",
-];
+import { road } from "../road.js";
+import { PLAYER_PNG_PATH } from "../config.js"
 
 export class Player implements Entity, HasCollision, HasVisualAttachments, HasInvincibility {
-
   element: HTMLImageElement;
+  direction: 0 | 1 | 2 = 1; // esquerda, centro, direita
 
-  position = {
-    x: TAMX / 2 - 50,
-    y: 700
-  };
+  position = { x: TAMX / 2 - 30, y: TAMY - 130 };
+  velocity = { x: 0, y: 0 };
+  size = { width: 32, height: 74 };
+  hitbox = { width: 32, height: 74 };
+  type: EntityType = "player";
 
-  velocity = {
-    x: 0,
-    y: 0
-  };
-
-  size = {
-    width: 100,
-    height: 80
-  }
-
-  hitbox: { width: number, height: number } = {
-    width: this.size.width,
-    height: this.size.height
-  };
-
-  type: EntityType = 'player';
-
-  direction = 1;
-
+  activateInvincibility = false;
+  invincibilityTimeRemaining = INVINCIBILITY_TIME;
   visualAttachments: VisualAttachment[] = [];
-
-  activateInvincibility = true;
-
-  invincibilityTimeRemaining = INVINCIBILITY_TIME; 
 
   constructor() {
     this.element = document.createElement("img");
-
-    this.element.id = "ship";
-    this.element.src = directions[this.direction];
+    this.element.id = "moto";
+    this.element.src = this.getPlayerImageSrc();
     this.element.style.width = `${this.size.width}px`;
     this.element.style.height = `${this.size.height}px`;
+    this.element.style.position = "absolute";
+    this.element.draggable = false;
 
     this.syncElement();
+    road.element.appendChild(this.element);
 
-    space.element.appendChild(this.element);
+    const pizzaEl = document.createElement("img");
+    pizzaEl.src = this.getPizzaImageSrc();
+    pizzaEl.style.position = "absolute";
+    pizzaEl.style.width = "36px";
+    pizzaEl.style.height = "78px";
+    pizzaEl.style.display = "none";
+    pizzaEl.style.pointerEvents = "none";
+    road.element.appendChild(pizzaEl);
 
-    const shield = document.createElement("img");
+    const helmetEl = document.createElement("img");
+    helmetEl.src = this.getHelmetImageSrc();
+    helmetEl.style.position = "absolute";
+    helmetEl.style.width = `${this.size.width}px`;;
+    helmetEl.style.height = `${this.size.height}px`;
+    helmetEl.style.display = "none";
+    helmetEl.style.pointerEvents = "none";
+    road.element.appendChild(helmetEl);
 
-    shield.src = "assets/png/shield.png";
-
-    shield.style.position = "absolute";
-
-    shield.style.width = "120px";
-    shield.style.height = "120px";
-
-    shield.style.pointerEvents = "none";
-    shield.style.display = "none";
-
-    space.element.appendChild(shield);
     this.visualAttachments.push({
-        id: "shield",
-        element: shield,
-        offset: {
-            x: -10,
-            y: -20
-        },
-        isVisible: false
+      id: "pizza",
+      element: pizzaEl,
+      offset: { x: -4, y: -4 },
+      isVisible: false,
+      mirrorOnLeft: true,
+    });
+
+    this.visualAttachments.push({
+      id: "helmet",
+      element: helmetEl,
+      offset: { x: 0, y: 0 },
+      isVisible: false,
+      mirrorOnLeft: true,
     });
   }
 
@@ -86,9 +72,39 @@ export class Player implements Entity, HasCollision, HasVisualAttachments, HasIn
     this.element.style.top = `${this.position.y}px`;
   }
 
-  setDirection(direction: number) {
-    this.direction = direction;
-    this.element.src = directions[this.direction];
+  setDirection(dir: 0 | 1 | 2) {
+    this.direction = dir;
+    this.element.src = this.getPlayerImageSrc();
+    this.updateAttachmentImages();
+  }
+
+  private getPlayerImageSrc(): string {
+    if (this.direction === 0) return `${PLAYER_PNG_PATH}/playerLeft.png`;
+    if (this.direction === 2) return `${PLAYER_PNG_PATH}/playerRight.png`;
+    return `${PLAYER_PNG_PATH}/player.png`;
+  }
+
+  private getPizzaImageSrc(): string {
+    if (this.direction === 0) return `${PLAYER_PNG_PATH}/pizzaBoxLeft.png`;
+    if (this.direction === 2) return `${PLAYER_PNG_PATH}/pizzaBoxRight.png`;
+    return `${PLAYER_PNG_PATH}/pizzaBox.png`;
+  }
+
+  private getHelmetImageSrc(): string {
+    if (this.direction === 0) return `${PLAYER_PNG_PATH}/helmetLeft.png`;
+    if (this.direction === 2) return `${PLAYER_PNG_PATH}/helmetRight.png`;
+    return `${PLAYER_PNG_PATH}/helmet.png`;
+  }
+
+  private updateAttachmentImages(): void {
+    for (const attachment of this.visualAttachments) {
+      if (attachment.id === "pizza") {
+        attachment.element.src = this.getPizzaImageSrc();
+      }
+      if (attachment.id === "helmet") {
+        attachment.element.src = this.getHelmetImageSrc();
+      }
+    }
   }
 
   setInvencibility() {
